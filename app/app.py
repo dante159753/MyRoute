@@ -4,14 +4,14 @@ __all__ = ['app', 'login_manager']
 
 
 from flask import Flask
-from flask_restful import Resource, Api
 from flask.ext.login import LoginManager
+from flask.ext.misaka import Misaka
 from mongoengine import connect
 
 
-# init app and restful api
+# init app and markdown parser
 app = Flask(__name__)
-api = Api(app)
+Misaka(app)
 
 # read config
 app.config.from_object('config_default')
@@ -27,6 +27,11 @@ connect(
     alias='default'
 )
 
+# set encoding to utf-8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 
 from .resources.home import home_blueprint
 app.register_blueprint(home_blueprint, url_prefix='')
@@ -35,6 +40,10 @@ del home_blueprint
 from .resources.user import user_blueprint
 app.register_blueprint(user_blueprint, url_prefix='/user')
 del user_blueprint
+
+from .resources.route import route_blueprint
+app.register_blueprint(route_blueprint, url_prefix='/route')
+del route_blueprint
 
 print app.url_map
 

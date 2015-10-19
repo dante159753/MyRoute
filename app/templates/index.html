@@ -12,6 +12,21 @@
   <form action='{{ url_for('user.logout') }}' method='post'>
 	  <input type='submit' value='logout'/>
   </form>
+  已有路线:
+  {% for route in routes %}
+	<div class=route>
+		<a href='{{ url_for("route.get_page", route_id=route.id) }}'>{{ route.title }}</a>
+	</div>
+  {% endfor %}
+
+  <p>新建路线:</p>
+  <form action='{{ url_for('route.add_route') }}' method='post' enctype='multipart/form-data'>
+	  路线标题
+	  <input type='text' name='title'/><br/>
+	  路线md文件
+	  <input type='file' name='md_file'/><br/>
+	  <input type='submit' value='add'/>
+  </form>
 {% else %}
   <h1>Hello World!</h1>
   <form action='{{ url_for('user.login') }}' method='post'>
