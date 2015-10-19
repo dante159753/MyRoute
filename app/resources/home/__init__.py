@@ -2,14 +2,10 @@ from flask import Blueprint
 from flask_restful import Api
 
 __all__ = [
-    'blueprint'
+    'home_blueprint'
 ]
 
-blueprint = Blueprint('home', __name__)
-api = Api(blueprint)
+home_blueprint = Blueprint('home', __name__)
 
-
-from .home import HomeRes
-api.add_resource(HomeRes, '/home/')
-del HomeRes
+import home
 

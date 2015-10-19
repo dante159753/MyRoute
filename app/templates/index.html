@@ -4,10 +4,34 @@
 <title>Hello from Flask</title>
 </head>
 <body>
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
+{% for message in get_flashed_messages() %}
+	<div class=flash>{{ message }}</div>
+{% endfor %}
+{% if current_user.email %}
+  <h1>Hello {{ current_user.email }}!</h1>
+  <form action='{{ url_for('user.logout') }}' method='post'>
+	  <input type='submit' value='logout'/>
+  </form>
 {% else %}
   <h1>Hello World!</h1>
+  <form action='{{ url_for('user.login') }}' method='post'>
+	  <p>login</p>
+	  <input name='email' type='text'/><br/>
+	  <input name='password' type='password'/><br/>
+	  <input name='remember_me' type='checkbox' value='remember'/><br/>
+	  <input type='submit' value='login'/>
+  </form>
+  <form action='{{ url_for('user.register') }}' method='post'>
+	  <p>register</p>
+	  <input name='email' type='text'/><br/>
+	  <input name='password' type='password'/><br/>
+	  <input name='password_conf' type='password'/><br/>
+	  male
+	  <input name='gender' type='radio' value='male' checked='checked'/>
+	  female
+	  <input name='gender' type='radio' value='female'/><br/>
+	  <input type='submit' value='register'/>
+  </form>
 {% endif %}
 </body>
 </html>

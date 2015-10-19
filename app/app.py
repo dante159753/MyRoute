@@ -28,13 +28,13 @@ connect(
 )
 
 
-from .resources.home import blueprint
-app.register_blueprint(blueprint, url_prefix='')
-del blueprint
+from .resources.home import home_blueprint
+app.register_blueprint(home_blueprint, url_prefix='')
+del home_blueprint
 
-from .resources.user import blueprint
-app.register_blueprint(blueprint, url_prefix='/user')
-del blueprint
+from .resources.user import user_blueprint
+app.register_blueprint(user_blueprint, url_prefix='/user')
+del user_blueprint
 
 print app.url_map
 

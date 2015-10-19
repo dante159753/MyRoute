@@ -1,34 +1,53 @@
-from flask.ext.restful import Resource, reqparse
-from flask.ext.login import login_required, login_user
-from flask import render_template, redirect, flash, url_for
-from app.helpers.header import add_response_headers
+from flask.ext.login import login_required, login_user, logout_user
+from flask import render_template, redirect, flash, url_for, request
 from app.helpers.user import UserHelper
-
-__all__ = ['LoginRes', 'LogoutRes', 'RegisterRes']
-
-
-class LoginRes(Resource):
-
-    post_parser = reqparse.RequestParser()
-    post_parser.add_argument('email', type=unicode, required=True)
-    post_parser.add_argument('password', type=unicode, required=True)
-    post_parser.add_argument('remember_me', type=lambda x:True if x == 'remember' else False, required=True)
-
-    def post(self):
-        args = self.post_parser.parse_args()
-
-        user_to_login = UserHelper.get_by_email(args['email'])
-        if user_to_login == None or not UserHelper.verify_password(user_to_login, args['password']):
-            flash('invalid email or password')
-            return redirect(url_for('home.homeres'))
-        
-        # email and password is correct
-        login_user(user_to_login)
-        return redirect(url_for('home.homeres'))
+from . import user_blueprint
 
 
-class LogoutRes(Resource):
-    def post(self):
-        logout_user()
-        return redirect(url_for('home.homeers'))
+@user_blueprint.route('/login/', methods=['POST'])
+def login():
+    try:
+        assert 'email' in request.form
+        assert 'password' in request.form
+    except AssertionError:
+        flash('please input email and password')
+        return redirect(url_for('home.home'))
+    user_to_login = UserHelper.get_by_email(request.form['email'])
+    if user_to_login == None or not UserHelper.verify_password(user_to_login, request.form['password']):
+        flash('invalid email or password')
+        return redirect(url_for('home.home'))
+    
+    # email and password is correct
+    login_user(user_to_login)
+    return redirect(url_for('home.home'))
+
+
+@user_blueprint.route('/logout/', methods=['POST'])
+def logout():
+    logout_user()
+    return redirect(url_for('home.home'))
+
+
+@user_blueprint.route('/register/', methods=['POST'])
+def register():
+    try:
+        assert 'email' in request.form
+        assert 'password' in request.form
+        assert 'password_conf' in request.form
+        assert request.form['password'] == request.form['password_conf']
+        assert 'gender' in request.form
+    except AssertionError:
+        flash('please input all necessary info')
+        return redirect(url_for('home.home'))
+
+    if UserHelper.get_by_email(request.form['email']) != None:
+        flash('the email has been registered!')
+        return redirect(url_for('home.home'))
+
+    gender = 0 if request.form['gender'] == 'male' else 1
+
+    new_user = UserHelper.create_user(request.form['email'], request.form['password'], gender)
+    login_user(new_user)
+    return redirect(url_for('home.home'))
+
 

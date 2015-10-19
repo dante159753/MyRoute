@@ -12,7 +12,7 @@ def user_loader(user_id):
 
     :param unicode user_id: user_id (email) user to retrieve
     """
-    return User.objects(email=user_id)
+    return User.objects(email=user_id).first()
 
 
 class UserHelper(object):
@@ -32,7 +32,7 @@ class UserHelper(object):
         assert isinstance(user, User)
         assert isinstance(password, basestring)
 
-        return user.password == UserHelper._password_hash(password, user.salt)
+        return user.salted_password == UserHelper._password_hash(password, user.salt)
 
     @staticmethod
     def get_by_email(email):
