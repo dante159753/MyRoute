@@ -27,10 +27,14 @@ connect(
     alias='default'
 )
 
-        
-class HelloWorld(Resource):
-    def get(self):
-        return {'hello' : 'world'}
 
-api.add_resource(HelloWorld, '/')
+from .resources.home import blueprint
+app.register_blueprint(blueprint, url_prefix='')
+del blueprint
+
+from .resources.user import blueprint
+app.register_blueprint(blueprint, url_prefix='/user')
+del blueprint
+
+print app.url_map
 
