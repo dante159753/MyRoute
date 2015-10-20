@@ -3,6 +3,7 @@ Flask==0.10.1
 Flask-Login==0.3.2
 Flask-Misaka==0.3.0
 Flask-RESTful==0.3.4
+gunicorn==19.3.0
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
