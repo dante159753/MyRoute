@@ -27,11 +27,6 @@ connect(
     alias='default'
 )
 
-# set encoding to utf-8
-import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 
 from .resources.home import home_blueprint
 app.register_blueprint(home_blueprint, url_prefix='')
