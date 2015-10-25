@@ -15,6 +15,11 @@ def user_loader(user_id):
     return User.objects(email=user_id).first()
 
 
+@login_manager.unauthorized_handler
+def unauthorized_redirect():
+    return redirect(url_for('home.home'))
+
+
 class UserHelper(object):
     @staticmethod
     def _password_hash(password, salt):
@@ -41,12 +46,13 @@ class UserHelper(object):
         return User.objects(email=email).first()
 
     @staticmethod
-    def create_user(email, password, gender):
+    def create_user(nickname, email, password, gender):
         """Sign up a user"""
 
         # check wheather the email has been registered
         assert UserHelper.get_by_email(email) == None
 
+        assert isinstance(nickname, basestring)
         assert isinstance(email, basestring)
         assert isinstance(password, basestring)
         assert gender in [0,1]
@@ -56,6 +62,7 @@ class UserHelper(object):
         salted_password = UserHelper._password_hash(password, salt)
 
         new_user = User()
+        new_user.nickname = nickname
         new_user.email = email
         new_user.salt = salt
         new_user.salted_password = salted_password

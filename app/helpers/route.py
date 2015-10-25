@@ -1,4 +1,5 @@
 from datetime import datetime
+from bson import ObjectId
 from flask.ext.login import current_user, AnonymousUserMixin
 
 from app.models.user import User
@@ -29,7 +30,6 @@ class RouteHelper(object):
         assert len(title) >= 5, 'route name too short!'
         assert father == None or isinstance(father, Route), 'father is not Route'
         assert allowed_file(mdfile.filename), 'invalid filename'
-        #assert isinstance(file, 
 
         new_route = Route()
         new_route.title = title
@@ -38,6 +38,34 @@ class RouteHelper(object):
         new_route.md_file.put(mdfile)
         new_route.save()
         return new_route
+
+    @staticmethod
+    def finish(route_id):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+        assert route.finished == False
+
+        route.finished = True
+        route.n_attachment = len(route.attached)
+        route.save()
+        return route
+
+    @staticmethod
+    def clear(route_id):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+        assert route.finished == False
+        
+        from app.helpers.route import RouteHelper
+        for attach_id in route.attached:
+            AttachmentHelper.delete(attach_id)
+
+        while len(route.attached) > 0:
+            route.attached.pop()
+
+        route.save()
 
     @staticmethod
     def modify(route_id, mdfile):

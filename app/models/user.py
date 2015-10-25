@@ -6,6 +6,7 @@ __all__ = ['User']
 
 
 class User(Document, UserMixin):
+    nickname = StringField(required=True)
     email = EmailField(required=True)
     salted_password = StringField(required=True)
     salt = StringField(required=True)

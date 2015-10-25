@@ -1,4 +1,5 @@
 aniso8601==1.0.0
+enum34==1.0.4
 Flask==0.10.1
 Flask-Login==0.3.2
 Flask-Misaka==0.3.0

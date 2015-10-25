@@ -2,20 +2,21 @@
 <html>
 <head>
 <title>Hello from Flask</title>
+<script src="{{ url_for('static', filename='epiceditor/js/epiceditor.min.js') }}"></script>
 </head>
 <body>
 {% for message in get_flashed_messages() %}
 	<div class=flash>{{ message }}</div>
 {% endfor %}
-{% if current_user.email %}
-  <h1>Hello {{ current_user.email }}!</h1>
+{% if current_user.nickname %}
+  <h1>Hello {{ current_user.nickname }}!</h1>
   <form action='{{ url_for('user.logout') }}' method='post'>
 	  <input type='submit' value='logout'/>
   </form>
   已有路线:
   {% for route in routes %}
 	<div class=route>
-		<a href='{{ url_for("route.get_page", route_id=route.id) }}'>{{ route.title }}</a>
+		<a href='{{ url_for("route.route_page", route_id=route.id) }}'>{{ route.title }}</a>
 	</div>
   {% endfor %}
 
@@ -27,6 +28,53 @@
 	  <input type='file' name='md_file'/><br/>
 	  <input type='submit' value='add'/>
   </form>
+  <div id="epiceditor"></div>
+  <button onclick='show_content()'>show content</button>
+  <script>
+var opts = {
+  container: 'epiceditor',
+  textarea: null,
+  basePath: '/static/epiceditor',
+  clientSideStorage: true,
+  localStorageName: 'epiceditor',
+  useNativeFullscreen: true,
+  parser: marked,
+  file: {
+    name: 'epiceditor',
+    defaultContent: '',
+    autoSave: 100
+  },
+  theme: {
+    base: '/themes/base/epiceditor.css',
+    preview: '/themes/preview/preview-dark.css',
+    editor: '/themes/editor/epic-dark.css'
+  },
+  button: {
+    preview: true,
+    fullscreen: true,
+    bar: "auto"
+  },
+  focusOnLoad: false,
+  shortcut: {
+    modifier: 18,
+    fullscreen: 70,
+    preview: 80
+  },
+  string: {
+    togglePreview: 'Toggle Preview Mode',
+    toggleEdit: 'Toggle Edit Mode',
+    toggleFullscreen: 'Enter Fullscreen'
+  },
+  autogrow: true
+};
+	var editor = new EpicEditor(opts).load();
+	function show_content(){
+		//document.write(editor.exportFile());
+		editor.remove('epiceditor');
+		editor.unload();
+		editor.load(opts);
+	}
+  </script>
 {% else %}
   <h1>Hello World!</h1>
   <form action='{{ url_for('user.login') }}' method='post'>
@@ -38,8 +86,13 @@
   </form>
   <form action='{{ url_for('user.register') }}' method='post'>
 	  <p>register</p>
+	  昵称
+	  <input name='nickname' type='text'/><br/>
+	  邮箱
 	  <input name='email' type='text'/><br/>
+	  密码
 	  <input name='password' type='password'/><br/>
+	  确认密码
 	  <input name='password_conf' type='password'/><br/>
 	  male
 	  <input name='gender' type='radio' value='male' checked='checked'/>

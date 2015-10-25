@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+<title>创建路线</title>
+</head>
+<body>
+{% for message in get_flashed_messages() %}
+	<div class=flash>{{ message }}</div>
+{% endfor %}
+{% for attachment in attachs %}
+<div class='attachment'>
+	<p> {{ attachment.info['title'] }} </p>
+	<form action='{{ url_for("route.delete_attach", attach_id=attachment.id, route_id=route.id) }}' method='post'>
+		<input type='submit' value='delete attach'/>
+	</form>
+</div>
+{% endfor %}
+<form action='{{ url_for("route.add_attach", route_id=route.id) }}' method=post>
+	<input type='text' name='key' width='400px'/>
+	<select name='type'>
+		<option value='1'>书籍</option>
+		<option value='2'>url</option>
+		<option value='3'>其他</option>
+	</select>
+	<input type='submit' value='提交'/>
+</form>
+<form action='{{ url_for("route.finish_edit", route_id=route.id) }}' method=post>
+	<input type='submit' value='finish'/>
+</form>
+</body>
+</html>
+
+
