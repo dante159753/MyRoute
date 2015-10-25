@@ -51,7 +51,6 @@ def add_attach_page(route_id):
         attachment = AttachmentHelper.get(ObjectId(attach_id))
         if attachment.atype != AttachType.TEXT.value:
             attachment.info = json.loads(attachment.info)
-        attachment.atype = attachment.atype.value
         attachs.append(attachment)
     
     return render_template('create_route.html', route=route, attachs=attachs)
@@ -141,12 +140,17 @@ def delete_attach(route_id, attach_id):
 def add_route():
     try:
         assert len(request.form['title']) > 0, 'please input title'
-        assert 'md_file' in request.files, 'please select a md file'
+        assert 'md_text' in request.form, 'please input route content'
     except AssertionError, e:
         flash(e.message)
         return redirect(url_for('home.home'))
 
-    new_route = RouteHelper.add(request.form['title'], None, request.files['md_file'])
+    new_route = RouteHelper.add(request.form['title'], None, request.form['md_text'])
 
     return redirect(url_for('route.add_attach_page', route_id=new_route.id))
+
+@route_blueprint.route('/route/<route_id>/rate/', methods=['POST'])
+@login_required
+def rate():
+    pass
 

@@ -21,15 +21,15 @@
   {% endfor %}
 
   <p>新建路线:</p>
-  <form action='{{ url_for('route.add_route') }}' method='post' enctype='multipart/form-data'>
+  <form id='create_route_form' action='{{ url_for('route.add_route') }}' method='post'>
 	  路线标题
 	  <input type='text' name='title'/><br/>
-	  路线md文件
-	  <input type='file' name='md_file'/><br/>
+	  路线内容
+	  <input id='md_text' type='hidden' name='md_text'/><br/>
+	  <div id="epiceditor"></div>
 	  <input type='submit' value='add'/>
   </form>
-  <div id="epiceditor"></div>
-  <button onclick='show_content()'>show content</button>
+    <button onclick='show_content()'>show content</button>
   <script>
 var opts = {
   container: 'epiceditor',
@@ -69,7 +69,11 @@ var opts = {
 };
 	var editor = new EpicEditor(opts).load();
 	function show_content(){
-		//document.write(editor.exportFile());
+		console.log(editor.exportFile());
+		document.getElementById('md_text').value = editor.exportFile();
+
+		document.getElementById('create_route_form').submit();
+
 		editor.remove('epiceditor');
 		editor.unload();
 		editor.load(opts);
