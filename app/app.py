@@ -40,5 +40,9 @@ from .resources.route import route_blueprint
 app.register_blueprint(route_blueprint, url_prefix='/route')
 del route_blueprint
 
+from .resources.category import category_blueprint
+app.register_blueprint(category_blueprint, url_prefix='/category')
+del category_blueprint
+
 print app.url_map
 

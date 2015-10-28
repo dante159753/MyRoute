@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>学觅网</title>
+    <!-- Bootstrap -->
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+    <link href="/static/css/style.css" rel="stylesheet">
+    <link href="/static/css/myroute.css" rel="stylesheet">
+
+    <body id="top">
+        <!-- navbar -->
+        <nav class="navbar-fixed-top navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigations</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="index.html">MYROUTE</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                       <li><a href="category.html">推荐分类</a></li>
+                        <li><a href="create-route.html">创建路线</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="disabled"><a href="#">导航1</a></li>
+                                <li><a href="#">导航1</a></li>
+                                <li><a href="#">导航1</a></li>
+                                <li class="divider"></li>
+                                <li class="disabled"><a href="#">导航1</a></li>
+                                <li><a href="#">导航1</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search">
+                        <div class="form-group">
+                            <div class="has-feedback">
+                                <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
+                                <input type="text" class="form-control" placeholder="搜索你想要的内容...">
+                            </div>
+                        </div>
+                        <a class="tx" href="user-home.html"><img src="images/tx/tx.png" class="img-circle" alt=""></a>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- end of navbar -->
+        <div class="jumbotron">
+            <div class="container off-con">
+                <h1>Node.js学习路线</h1>
+                <p>作者：<span>隔壁老王</span></p>
+                <p>评分：<span>9.8</span></p>
+                <div class="star-rating">
+                    <select id="example-f" name="rating">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="container off-con">
+                <div class="detail">
+                    <div class="row">
+                        <div class="rt-n col-md-9 gray">
+                            <span title="创建时间" class="glyphicon glyphicon-time">2015-10-23</span>
+                            <span title="参与人数" class="glyphicon glyphicon-user">50</span>
+                            <span title="完成人数" class="glyphicon glyphicon-ok">25</span>
+                            <span title="评分人数" class="glyphicon glyphicon-star">24</span>
+                            <hr>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="button" id="rt-join" class="btn btn-primary btn-block rt-join" value="加入路线">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9 col-sm-12 col-sx-12 rt-detail">
+                            <div>
+                                <p>用Nodejs已经1年有余，陆陆续续写了48篇关于Nodejs的博客文章，用过的包有上百个。和所有人一样，我也从Web开发开始，然后到包管 理，再到应用系统的开发，最后开源自己的Nodejs项目。一路走来，Nodejs已经成为我做Web项目的标配。我非常愿意把原Java、PHP的 Web系统向Nodejs迁移，因为1个人可以很容易的完成10个人的活了。 本文把我的学习和使用经验进行归纳总结，希望给新入门Nodejs的同学做一些指引。</p>
+                                <p>目录</p>
+                                <p class="text-primary">Nodejs的介绍</p>
+                                <p class="text-primary">15个Nodejs应用场景</p>
+                                <p class="text-primary"> Nodejs学习路线图 </p>
+                                <h3>1. Nodejs的介绍 </h3>
+                                <p>Node.js的是建立在Chrome的JavaScript的运行时，可方便地构建快速，可扩展的网络应用程序的平台。Node.js使用事件驱动，非阻塞I/O模型，轻量、高效，可以完美地处理时时数据，运行在不同的设备上。</p>
+                                <p>1.1. 谁在用Nodejs? </p>
+                                <p>从Nodejs官方网站的企业登记页(https://github.com/joyent/node/wiki/Projects,-Applications,-and-Companies-Using-Node)，包括我们熟知的公司有LinkedIn, Yahoo, Paypal, eBay, Walmart，Groupon 还有很多的中小型公司，国内的公司如雪球、淘宝、网易、百度等也都有很多项目运行在Node.js之上。这些公司不仅是尝试在用，而且都在向Nodejs迁移。截止到2014年6月本文发稿时，已经有79693包在npm.org上面发布，而且这个数字还在快速增长中。 那么接下来，大家肯定都会问为什么要是用Nodejs呢？ </p>
+                                <p>1.2. 为什么要用Nodejs? 从我使用体会来说，Node有4大优势：
+                                    <ol>
+                                        <li> Nodejs基于Javascript语言，不用再单独新学一门陌生的语言，从而减低了学习的门槛。同时，Javascript语言在Web前端开发中至 关重要，特别HTML5的应用必须要使用，所以前后台统一语言，不仅可以实现程序员的全栈开发，还可以统一公共类库，代码标准化。单凭这一 点，Nodejs就已经赢得市场的青睐了。</li>
+                                        <li>Nodejs并没有重新开发运行时环境，而是选择了目前最快的浏览器内核V8做为执行引擎，保证了Nodejs的性能和稳定性.</li>
+                                        <li>Nodejs的开发非常高效，而且代码简单，得意于Nodejs的单线程机制。而Nodejs的另一个特点异步编程，让Nodejs处理IO密集型应用有了明显的优势。个人感觉，用Nodejs比Java做Web开发要高效10倍，比PHP的代码还要简单。</li>
+                                        <li>Nodejs的社区在壮大，不仅包的数量在快速增加，而且包的质量也要明显好于其他语言的。很多明星级的包，都是简单而灵巧的，为了开发者的使用习惯而设 计。我最常用到的工具包，如socket.io, moment.js, underscore.js, async.js, express.js, bower.js, grunt.js, forever.js…，确实在改变我以前的编程习惯。</li>
+                                    </ol>
+                                    <p>当然，除了我使用Nodejs的理由，很多公司也都有自己的使用理由。 ebay选择Nodejs的理由，可以归纳为以下4点： 动态语言：开发效率非常高，并有能力构建复杂系统，如ql.io。 性能和I/O负载：Nodejs非常好的解决了IO密集的问题，通过异步IO来实现。 连接的内存开销：每个Node.js进程可以支持超过12万活跃的连接，每个连接消耗大约2K的内存。 操作性：实现了Nodejs对于内存堆栈的监控系统。 </p>
+                                    <p>1.3. Nodejs不适合的领域 </p>
+                                    <p>每一种语言或平台都有不擅长领域，对于Nodejs来说最不擅长的领域在于CPU和内存的编程操作。</p>
+                                    <ol>
+                                        <li> Nodejs基于Javascript语言，不用再单独新学一门陌生的语言，从而减低了学习的门槛。同时，Javascript语言在Web前端开发中至 关重要，特别HTML5的应用必须要使用，所以前后台统一语言，不仅可以实现程序员的全栈开发，还可以统一公共类库，代码标准化。单凭这一 点，Nodejs就已经赢得市场的青睐了。</li>
+                                        <li>Nodejs并没有重新开发运行时环境，而是选择了目前最快的浏览器内核V8做为执行引擎，保证了Nodejs的性能和稳定性.</li>
+                                        <li>Nodejs的开发非常高效，而且代码简单，得意于Nodejs的单线程机制。而Nodejs的另一个特点异步编程，让Nodejs处理IO密集型应用有了明显的优势。个人感觉，用Nodejs比Java做Web开发要高效10倍，比PHP的代码还要简单。</li>
+                                        <li>Nodejs的社区在壮大，不仅包的数量在快速增加，而且包的质量也要明显好于其他语言的。很多明星级的包，都是简单而灵巧的，为了开发者的使用习惯而设 计。我最常用到的工具包，如socket.io, moment.js, underscore.js, async.js, express.js, bower.js, grunt.js, forever.js…，确实在改变我以前的编程习惯。</li>
+                                    </ol>
+                                    <h3>2. 15个Nodejs应用场景</h3>
+                                    <p>我们已经对Nodejs有了初步的了解，接下来看看Nodejs的应用场景。</p>
+                                    <p>2.1 Web开发：Express + EJS + Mongoose/MySQL</p>
+                                    <p>express 是轻量灵活的Nodejs Web应用框架，它可以快速地搭建网站。Express框架建立在Nodejs内置的Http模块上，并对Http模块再包装，从而实际Web请求处理的功能。 ejs是一个嵌入的Javascript模板引擎，通过编译生成HTML的代码。 mongoose 是MongoDB的对象模型工具，通过Mongoose框架，可以进行访问MongoDB的操作。 mysql 是连接MySQL数据库的通信API，可以进行访问MySQL的操作。 通常用Nodejs做Web开发，需要3个框架配合使用，就像Java中的SSH。
+                                    </p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-sx-12 rt-source">
+                            <div class="book">
+                                <p>推荐书籍</p>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
+                                        <img src="http://book.rednode.cn/covers/web-development-with-node-express.png" alt="">
+                                    </div>
+                                    <div class="col-md-6 col-sm-3 col-xs-6">
+                                        <ul>
+                                            <li>书名:<a href="#" title="进入豆瓣查看详细信息"><span>Node.js Products and Expertise</span></a></li>
+                                            <li>作者:<span> StrongLoop</span></li>
+                                            <li>出版日期: <span>2014</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
+                                        <img src="http://book.rednode.cn/covers/web-development-with-node-express.png" alt="">
+                                    </div>
+                                    <div class="col-md-6 col-sm-3 col-xs-6">
+                                        <ul>
+                                            <li>书名:<a href="#" title="进入豆瓣查看详细信息"><span>Node.js Products and Expertise</span></a></li>
+                                            <li>作者:<span> StrongLoop</span></li>
+                                            <li>出版日期: <span>2014</span></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
+                                        <img src="http://book.rednode.cn/covers/web-development-with-node-express.png" alt="">
+                                    </div>
+                                    <div class="col-md-6 col-sm-3 col-xs-6">
+                                        <ul>
+                                            <li>书名:<a href="#" title="进入豆瓣查看详细信息"><span>Node.js Products and Expertise</span></a></li>
+                                            <li>作者:<span> StrongLoop</span></li>
+                                            <li>出版日期: <span>2014</span></li>
+                                        </ul>
+                                        <span id="like-e" class="glyphicon glyphicon-heart-empty"></span>
+                                         <span id="like" class="glyphicon glyphicon-heart"></span>
+                                         <span id="num" class="n-like">15</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end-of-book-->
+                            <div class="link">
+                                <p>相关链接</p>
+                                <hr>
+                                <a href="http://book.rednode.cn/">史上最全的Node.js书籍集合— —For those who love Node.js</a>
+                                <hr>
+                                <a href="http://book.rednode.cn/">史上最全的Node.js书籍集合— —For those who love Node.js</a>
+                            </div>
+                            <!--end-of-link-->
+                        </div>
+                        <!--end-of-rt-source-->
+                    </div>
+                </div>
+                <div id="comment"></div>
+                <hr>
+                <div class="footer">
+                    <ul class="menu">
+                        <li>©MYROUTE All Rights Reserved</li> |
+                        <li>Design:YZTeam</li>
+                    </ul>
+                </div>
+            </div>
+            <!--container-->
+        </div>
+        <!--container-fluid-->
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="/static/js/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/jquery.barrating.js"></script>
+        <script src="/static/js/starrating.js"></script>
+        <script>
+        $(function() {
+            //当滚动条的位置处于距顶部0像素以下时，跳转链接出现，否则消失  
+            $(function() {
+                $(window).scroll(function() {
+                    if ($(window).scrollTop() > 0) {
+                        $("#totop").fadeIn(1500);
+                    } else {
+                        $("#totop").fadeOut(1500);
+                    }
+                });
+
+                //当点击跳转链接后，回到页面顶部位置  
+
+                $("#totop").click(function() {
+                    $('body,html').animate({
+                        scrollTop: 0
+                    }, 1000);
+                    return false;
+
+                });
+            });
+        });
+
+        $("#rt-join").click(function() {
+            document.getElementById("rt-join").value = "已加入路线";
+        });
+        $("#like-e").click(function() {  
+            var onum = $("#num");
+            var num = parseInt(onum.text());
+            document.getElementById("like-e").style.display="none";
+            document.getElementById("like").style.display="inline";
+            num++;
+            onum.text(num);
+
+        });
+          $("#like").click(function() {  
+            var onum = $("#num");
+            var num = parseInt(onum.text());
+            document.getElementById("like").style.display="none";
+            document.getElementById("like-e").style.display="inline";
+            num--;
+            onum.text(num);
+        });
+        </script>
+    </body>
+
+</html>

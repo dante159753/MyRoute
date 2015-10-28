@@ -1,0 +1,78 @@
+h1,h2,h3,h4,h5{
+     font-family:"Helvetica Neue",Helvetica,Arial, 'Microsoft yahei',Tahoma,Arial,sans-serif;
+
+}
+body{
+    background:#fff;
+    font-family: 'Candara', 'Microsoft yahei',sans-serif;
+    line-height: 1.75em;
+    font-weight: 300;
+    letter-spacing: 1px;
+    text-shadow: 0 0 0.5px rgba(58, 57, 57, 0.25);
+    -webkit-text-stroke: 0.25px;: 
+}
+.container-fluid{
+    font-family: "Helvetica Neue",Helvetica,Arial,'Microsoft yahei',sans-serif;
+    letter-spacing:0px;
+}
+
+a {
+    -moz-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    -webkit-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    -ms-transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    transition: border-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    color: #35b88f;
+    text-shadow: 0 0 0.5px rgba(53, 184, 143, 0.25);
+    text-decoration: none;
+}
+
+/*button*/
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+button,
+.button {
+    -moz-transition: background-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    -webkit-transition: background-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    -ms-transition: background-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    transition: background-color 0.35s ease-in-out, color 0.35s ease-in-out;
+    -webkit-appearance: none;
+    position: relative;
+    display: inline-block;
+    border: 0;
+    background: #35b88f;
+    color: #fff;
+    text-shadow: 0 0 0.5px rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    text-decoration: none;
+    outline: 0;
+    padding: 1em 3em 1em 3em;
+    text-align: center;
+    border-radius: 3em;
+    font-weight: 400;
+}
+
+
+/*mycss*/
+/*navbar*/
+
+.tx{
+    padding-left: 1em;
+}
+.tx img:hover{
+    box-shadow: 0 0 0.5em #35b88f;
+}
+.footer{
+    text-align: center;
+    margin-bottom: 100px;
+    margin-top: 50px;
+}
+.footer li{
+    display: inline;
+}
+#totop img {
+    position: fixed;
+    bottom: 10%;
+    right: 5%;
+}
+

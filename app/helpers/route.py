@@ -1,10 +1,14 @@
 from datetime import datetime
 from bson import ObjectId
 from flask.ext.login import current_user, AnonymousUserMixin
+from mongoengine import *
 
 from app.models.user import User
 from app.models.route import Route
+from app.models.entered_route import EnteredRoute
 from app.helpers.timestamp import dt_to_ts
+from app.helpers.user import UserHelper
+from app.helpers.attachment import AttachmentHelper
 
 
 class RouteHelper(object):
@@ -15,6 +19,34 @@ class RouteHelper(object):
     @staticmethod
     def get_all():
         return Route.objects()
+
+    @staticmethod
+    def get_entered_route(route_id):
+        """Get he EnteredRoute Document"""
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+        
+        return EnteredRoute.objects( Q(user=current_user.id) & Q(route=route_id) ).first()
+
+    @staticmethod
+    def join(route_id):
+        """Join the Route"""
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+        assert route.finished == True
+
+        new_entered_route = EnteredRoute()
+        new_entered_route.user = current_user.id
+        new_entered_route.route = route_id
+        new_entered_route.save()
+        
+        user = UserHelper.get(current_user.id)
+        if route_id not in user.entered_routes:
+            user.entered_routes.append(route_id)
+        user.save()
+
 
     @staticmethod
     def add(title, father, mdtext):
@@ -36,7 +68,7 @@ class RouteHelper(object):
         return new_route
 
     @staticmethod
-    def finish(route_id):
+    def finish_edit(route_id):
         assert isinstance(route_id, ObjectId)
         route = RouteHelper.get(route_id)
         assert route
@@ -71,4 +103,31 @@ class RouteHelper(object):
         route.md_file.replace(mdfile)
 
         return route
+
+    @staticmethod
+    def finish_attach(route_id, attach_id):
+        assert isinstance(route_id, ObjectId)
+        assert isinstance(attach_id, ObjectId)
+        assert AttachmentHelper.get(attach_id)
+        assert RouteHelper.get(route_id)
+
+        route = RouteHelper.get(route_id)
+        entered_route = RouteHelper.get_entered_route(route_id)
+        assert entered_route
+        if attach_id in route.attached and attach_id not in entered_route.attach_complete:
+            entered_route.attach_complete.append(attach_id)
+
+        entered_route.percenrage = len(entered_route.attach_complete) / float(route.n_attachment) * 100
+
+        entered_route.save()
+
+    @staticmethod
+    def get_stat(finished):
+        """Get user's route statistics, True: return finished number, False: return unfinished number, None: return total number"""
+        if finished == True:
+            return EnteredRoute.objects(Q(user=current_user.id) & Q(percentage=100)).count()
+        elif finished == False:
+            return EnteredRoute.objects(Q(user=current_user.id) & Q(percentage__ne=100)).count()
+        else:
+            return EnteredRoute.objects(user=current_user.id).count()
 

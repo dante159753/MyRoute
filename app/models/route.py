@@ -1,6 +1,6 @@
 from mongoengine import *
 
-__all__ = ['Route']
+__all__ = ['Route', 'RateInfo']
 
 
 class Route(Document):

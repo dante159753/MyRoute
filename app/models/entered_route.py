@@ -1,17 +1,12 @@
 from mongoengine import *
 
-__all__ = ['EnteredRoute', 'CompleteInfo']
-
-
-class CompleteInfo(EmbeddedDocument):
-    attach = ObjectIdField(required=True)
-    finished = BooleanField(required=True, default=False)
+__all__ = ['EnteredRoute']
 
 
 class EnteredRoute(Document):
     user = ObjectIdField(required=True)
     route = ObjectIdField(required=True)
     percentage = IntField(default=0)
-    attach_complete = ListField(EmbeddedDocumentField(CompleteInfo))
+    attach_complete = ListField(ObjectIdField())
 
 

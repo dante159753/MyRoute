@@ -1,6 +1,7 @@
 import hashlib
 import binascii
 import os
+from flask.ext.login import current_user
 
 from app.models.user import User
 from app.app import login_manager
@@ -70,5 +71,29 @@ class UserHelper(object):
         new_user.save()
 
         return new_user
-        
+
+    @staticmethod
+    def modify_password(new_password):
+        assert isinstance(new_password, basestring)
+        user = UserHelper.get(current_user.id)
+
+        salt = binascii.hexlify(os.urandom(32))
+        salted_password = UserHelper._password_hash(new_password, salt)
+
+        user.salt = salt
+        user.salted_password = salted_password
+        user.save()
+
+        return user
+
+    @staticmethod
+    def modify_avator(img):
+        user = UserHelper.get(current_user.id)
+        if user.avator:
+            user.avator.replace(img)
+        else:
+            user.avator.put(img)
+        user.save()
+
+        return user
 

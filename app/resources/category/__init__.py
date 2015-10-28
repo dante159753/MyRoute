@@ -1,16 +1,10 @@
 from flask import Blueprint
-from flask-restful import Api
 
 __all__ = [
-    'blueprint'
+    'category_blueprint'
 ]
 
-blueprint = Blueprint('category', __name__)
-api = Api(blueprint)
+category_blueprint = Blueprint('category', __name__)
 
-
-from .category import CategoryRes
-api.add_resource(CategoryRes, '/category/')
-del CategoryRes
-
+import category
 

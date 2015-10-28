@@ -8,6 +8,7 @@ __all__ = ['User']
 class User(Document, UserMixin):
     nickname = StringField(required=True)
     email = EmailField(required=True)
+    avator = FileField()
     salted_password = StringField(required=True)
     salt = StringField(required=True)
     gender = IntField(required=True, choices=[0,1])

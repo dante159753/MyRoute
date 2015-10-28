@@ -7,7 +7,6 @@ from app.models.user import User
 from app.models.route import Route
 from app.models.attachment import Attachment, AttachType
 from app.helpers.timestamp import dt_to_ts
-from app.helpers.route import RouteHelper
 from app.app import app
 
 
@@ -54,6 +53,8 @@ class AttachmentHelper(object):
     
     @staticmethod
     def delete(attach_id):
+        from app.helpers.route import RouteHelper
+
         assert isinstance(attach_id, ObjectId)
         assert AttachmentHelper.get(attach_id)
 
@@ -62,4 +63,24 @@ class AttachmentHelper(object):
         f_route.attached.remove(attach_id)
         f_route.save()
         attach.delete()
+
+    @staticmethod
+    def upvote(attach_id):
+        assert isinstance(attach_id, ObjectId)
+        assert AttachmentHelper.get(attach_id)
+
+        attach = AttachmentHelper.get(attach_id)
+        if current_user.id not in attach.upvote_list:
+            attach.upvote_list.append(current_user.id)
+        attach.save()
+
+    @staticmethod
+    def downvote(attach_id):
+        assert isinstance(attach_id, ObjectId)
+        assert AttachmentHelper.get(attach_id)
+
+        attach = AttachmentHelper.get(attach_id)
+        if current_user.id in attach.upvote_list:
+            attach.upvote_list.remove(current_user.id)
+        attach.save()
 
