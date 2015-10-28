@@ -1,0 +1,45 @@
+        <!-- navbar -->
+        <nav class="navbar-fixed-top navbar-inverse" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigations</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('home.home') }}">MYROUTE</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                       <li><a href="{{ url_for('category.root_page') }}">推荐分类</a></li>
+                        <li><a href="{{ url_for('route.create_route_page') }}">创建路线</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li class="disabled"><a href="#">导航1</a></li>
+                                <li><a href="#">导航1</a></li>
+                                <li><a href="#">导航1</a></li>
+                                <li class="divider"></li>
+                                <li class="disabled"><a href="#">导航1</a></li>
+                                <li><a href="#">导航1</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search">
+                        <div class="form-group">
+                            <div class="has-feedback">
+                                <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
+                                <input type="text" class="form-control" placeholder="搜索你想要的内容...">
+                            </div>
+                        </div>
+                        {% if avatar %}
+                            <a class="tx" href="{{url_for('user.user_home_page')}}"><img src="{{'data:image/jpeg;base64,' + avatar}}" class="img-circle" alt="" style="width:45px;height:45px"></a>
+                        {% else %}
+                            <a class="tx" href="{{url_for('user.user_home_page')}}"><img src="{{'data:image/jpeg;base64,' + current_user.avatar.read() if current_user.avatar else '/static/images/tx/txmin.png' }}" class="img-circle" alt="" style="width:45px;height:45px"></a>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- end of navbar -->

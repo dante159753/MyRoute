@@ -1,15 +1,18 @@
 import json
 from bson import ObjectId
+from bleach import clean
 
 from flask.ext.login import login_required, login_user, logout_user, current_user
 from flask import render_template, redirect, flash, url_for, request
-from flask.ext.misaka import markdown
 
 from app.helpers.route import RouteHelper
 from app.helpers.attachment import AttachmentHelper
 from app.models.attachment import AttachType
 from . import route_blueprint
 from app.helpers.parameter import check_form_para
+from app.helpers.category import CategoryHelper
+from app.helpers.user import UserHelper
+from app.helpers.timestamp import get_formatted_time
 
 
 @route_blueprint.route('/<route_id>/', methods=['GET'])
@@ -23,10 +26,16 @@ def route_page(route_id):
     
     route = RouteHelper.get(route_id)
 
+    route.author = UserHelper.get(route.author)
+    route.formatted_time = get_formatted_time(route.create_ts)
+    route.stat = RouteHelper.get_route_stat(route.id)
+    #route.cleaned_content = clean(route.content.read().decode('utf-8'), ['a', 'div', 'span', 'img'])
+    route.cleaned_content = route.content.read().decode('utf-8')  # TODO use bleach to sanitise html
+
     if not route.finished:
         return redirect(url_for('route.add_attach_page', route_id=route.id))
 
-    return render_template('route.html', route=route)
+    return render_template('route-detail.html', route=route)
 
 
 @route_blueprint.route('/<route_id>/add_attach/', methods=['GET'])
@@ -104,7 +113,7 @@ def finish_edit(route_id):
         flash('you are not author of the route')
         return redirect(url_for('home.home'))
 
-    RouteHelper.finish(route.id)
+    RouteHelper.finish_edit(route.id)
     
     flash('finished successfully')
     return redirect(url_for('route.route_page', route_id=route.id))
@@ -135,19 +144,28 @@ def delete_attach(route_id, attach_id):
     return redirect(url_for('route.add_attach_page', route_id=route.id))
 
 
+@route_blueprint.route('/create_route/', methods=['GET'])
+@login_required
+def create_route_page():
+    return render_template('create-route.html')
+
+
 @route_blueprint.route('/add/', methods=['POST'])
 @login_required
 def add_route():
     try:
         assert len(request.form['title']) > 0, 'please input title'
-        assert 'md_text' in request.form, 'please input route content'
+        assert 'content' in request.form, 'please input route content'
     except AssertionError, e:
         flash(e.message)
         return redirect(url_for('home.home'))
 
-    new_route = RouteHelper.add(request.form['title'], None, request.form['md_text'])
+    cpp_cate = CategoryHelper.get_by_title(u'C++')
+
+    new_route = RouteHelper.add(request.form['title'], cpp_cate.id, request.form['content'])
 
     return redirect(url_for('route.add_attach_page', route_id=new_route.id))
+
 
 @route_blueprint.route('/route/<route_id>/rate/', methods=['POST'])
 @login_required

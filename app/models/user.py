@@ -8,10 +8,10 @@ __all__ = ['User']
 class User(Document, UserMixin):
     nickname = StringField(required=True)
     email = EmailField(required=True)
-    avator = FileField()
+    avatar = FileField()
     salted_password = StringField(required=True)
     salt = StringField(required=True)
-    gender = IntField(required=True, choices=[0,1])
+    gender = IntField(required=True, choices=[0, 1])
     point = IntField(default=0)
     entered_routes = ListField(ObjectIdField())
 

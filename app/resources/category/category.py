@@ -37,37 +37,18 @@ def category_page(category_id):
     category.n_routes = len(category.routes)
     breadcrumb_list = [(category.title, category.id)]
     CategoryHelper.gene_bread(breadcrumb_list)
+    avatar = current_user.avatar.read()
 
-    son_routes = []
+    son_routes = CategoryHelper.get_son_routes(category.id)
     sons_hot_routes = []
 
-    return render_template('route-father.html', breadcrumb_list=breadcrumb_list, category=category, son_routes=son_routes, sons_hot_routes=sons_hot_routes)
-
-
-@category_blueprint.route('/<route_id>/add_attach/', methods=['GET'])
-@login_required
-def add_attach_page(route_id):
-    try:
-        route_id = ObjectId(route_id)
-        assert RouteHelper.get(route_id)
-        assert not RouteHelper.get(route_id).finished
-    except :
-        flash('invalid route_id')
-        return redirect(url_for('home.home'))
-
-    route = RouteHelper.get(route_id)
-
-    if route.author != current_user.id:
-        flash('you are not author of the route')
-        return redirect(url_for('home.home'))
-
-    attachs = []
-    for attach_id in route.attached:
-        attachment = AttachmentHelper.get(ObjectId(attach_id))
-        if attachment.atype != AttachType.TEXT.value:
-            attachment.info = json.loads(attachment.info)
-        attachs.append(attachment)
-    
-    return render_template('create_route.html', route=route, attachs=attachs)
+    return render_template(
+        'route-father.html',
+        breadcrumb_list=breadcrumb_list,
+        category=category,
+        son_routes=son_routes,
+        sons_hot_routes=sons_hot_routes,
+        avatar=avatar
+    )
 
 

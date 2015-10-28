@@ -21,47 +21,7 @@
 
 <body id="top">
 <!-- navbar -->
-<nav class="navbar-fixed-top navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                    data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigations</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="index.html">MYROUTE</a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li><a href="category.html">推荐分类</a></li>
-                <li><a href="create-route.html">创建路线</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li class="disabled"><a href="#">导航1</a></li>
-                        <li><a href="#">导航1</a></li>
-                        <li><a href="#">导航1</a></li>
-                        <li class="divider"></li>
-                        <li class="disabled"><a href="#">导航1</a></li>
-                        <li><a href="#">导航1</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right" role="search">
-                <div class="form-group">
-                    <div class="has-feedback">
-                        <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback"
-                                                    aria-hidden="true"></span></a>
-                        <input type="text" class="form-control" placeholder="搜索你想要的内容...">
-                    </div>
-                </div>
-                <a class="tx" href="user-home.html"><img src="images/tx/tx.png" class="img-circle" alt=""></a>
-            </form>
-        </div>
-    </div>
-</nav>
+{% include 'navbar.html' %}
 <!-- end of navbar -->
 <div class="container-fluid">
     <div class="container off-con">
@@ -71,11 +31,11 @@
                 <ol class="breadcrumb">
                     <li><a href="{{ url_for('category.root_page') }}">分类首页</a></li>
                     {% for bread in breadcrumb_list %}
-                    {% if loop.last %}
-                    <li class="active">{{bread[0]}}</li>
-                    {% else %}
-                    <li><a href="{{ url_for('category.category_page', category_id=bread[1]) }}">{{bread[0]}}</a></li>
-                    {% endif %}
+                        {% if loop.last %}
+                            <li class="active">{{bread[0]}}</li>
+                        {% else %}
+                            <li><a href="{{ url_for('category.category_page', category_id=bread[1]) }}">{{bread[0]}}</a></li>
+                        {% endif %}
                     {% endfor %}
                 </ol>
                 <h1>分类: {{ category.title }}</h1>
@@ -137,7 +97,7 @@
             <!-- side-panel -->
             <div class="col-md-3" id="side-menu">
                 <div class="hidden-xs hidden-sm">
-                    <a><img class="img-circle" src="images/cat-img/01.png" alt="username"></a>
+                    <a><img class="img-circle" src="{{'data:image/jpeg;base64,' + avatar if avatar else '/static/images/tx/txmin.png' }}" alt="username" style="width:100px;height:100px"></a>
 
                     <h3>{{ category.title }}</h3>
 
@@ -171,7 +131,7 @@
 </div>
 
 <div id="totop">
-    <a href="#top"><img title="回到顶部" src="static/images/arrow-g.png"></a>
+    <a href="#top"><img title="回到顶部" src="/static/images/arrow-g.png"></a>
 </div>
 <!--container-->
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

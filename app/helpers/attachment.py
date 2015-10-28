@@ -1,12 +1,8 @@
 import requests
-from datetime import datetime
 from bson import ObjectId
 from flask.ext.login import current_user
 
-from app.models.user import User
-from app.models.route import Route
 from app.models.attachment import Attachment, AttachType
-from app.helpers.timestamp import dt_to_ts
 from app.app import app
 
 
@@ -21,6 +17,8 @@ class AttachmentHelper(object):
 
     @staticmethod
     def add(route_id, attach_type, key):
+        from app.helpers.route import RouteHelper
+
         assert isinstance(route_id, ObjectId)
         assert RouteHelper.get(route_id)
         assert isinstance(attach_type, AttachType)
@@ -31,9 +29,9 @@ class AttachmentHelper(object):
             info = r.text
         elif attach_type == AttachType.URL:
             req_paras = {
-                    'url': key,
-                    'key': app.config['EMBEDLY_KEY']
-                    }
+                'url': key,
+                'key': app.config['EMBEDLY_KEY']
+            }
             r = requests.get(app.config['EMBEDLY_EXTRACT_API'], params=req_paras)
             info = r.text
         else:
@@ -50,7 +48,7 @@ class AttachmentHelper(object):
         f_route.save()
 
         return new_attach
-    
+
     @staticmethod
     def delete(attach_id):
         from app.helpers.route import RouteHelper
@@ -83,4 +81,3 @@ class AttachmentHelper(object):
         if current_user.id in attach.upvote_list:
             attach.upvote_list.remove(current_user.id)
         attach.save()
-

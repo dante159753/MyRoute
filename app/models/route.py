@@ -13,7 +13,7 @@ class Route(Document):
     n_completed = IntField(required=True, default=0)
     last_change_ts = IntField(required=False)
     create_ts = IntField(required=True)
-    md_file = FileField(required=True)
+    content = FileField(required=True)
     finished = BooleanField(required=True, default=False)
     n_attachment = IntField(required=True, default=0)
     attached = ListField(ObjectIdField())

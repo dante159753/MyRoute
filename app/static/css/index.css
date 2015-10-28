@@ -2440,3 +2440,20 @@ button.style3:hover,
 .theme-poptit .close:hover {
     color: #444;
 }
+
+.login-err{
+    font-size: 0.75em;
+    color:#ed1941;
+
+    margin-bottom: 1em;
+
+}
+
+.signin-err{
+
+    font-size: 0.75em;
+    color:#ed1941;
+    margin-bottom: -1em;
+
+
+}

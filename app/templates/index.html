@@ -19,6 +19,12 @@
             <h2>登 录</h2>
         </div>
         <div class="theme-popbod">
+            {% if login_error %}
+            {% for message in get_flashed_messages() %}
+            <div class="login-err">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+
 		<form name="loginform" action="{{ url_for('user.login') }}" method="post">
                 <ol>
                     <li>
@@ -31,7 +37,6 @@
                         <input type="submit" name="submit" value=" 登 录 " />
                     </li>
                 </ol>
-		<input type="hidden" name="remember_me" value="remember"/>
             </form>
         </div>
     </div>
@@ -110,6 +115,11 @@
         </header>
 	<form method="post" action=" {{ url_for('user.register') }}">
             <div class="row 50%">
+                {% if regis_error %}
+                {% for message in get_flashed_messages() %}
+                    <div class="12u$ 12u$(mobile) signin-err">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
                 <div class="12u 12u$(mobile)">
                     <input type="text" class="text" name="nickname" placeholder="昵称" />
                 </div>
@@ -202,6 +212,30 @@
         })
 
     })
+
+    //这个函数是弹出登录框的
+    function popover() {
+        $('.theme-popover-mask').fadeIn(100);
+        $('.theme-popover').slideDown(200);
+    }
+
+    {% if login_error %}
+    //调用这个函数（当然你拿去封装一下），显示登录失败
+    $(function(){
+        $(".login-err").css("display","block");
+        popover();
+    });
+    {% endif %}
+
+    {% if regis_error %}
+    //调用这个函数 注册显示错误
+    $(function(){
+        $(".signin-err").css("display","block");
+        $('body,html').animate({
+            scrollTop: $("#signin").offset().top //滚动到注册锚
+        }, 1000);
+    });
+    {% endif %}
     </script>
 </body>
 

@@ -21,66 +21,31 @@
 
 <body>
     <!-- navbar -->
-    <nav class="navbar-fixed-top navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigations</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">MYROUTE</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li><a href="category.html">推荐分类</a></li>
-                        <li><a href="create-route.html">创建路线</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="disabled"><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                            <li class="divider"></li>
-                            <li class="disabled"><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
-                        <div class="has-feedback">
-                            <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
-                            <input type="text" class="form-control" placeholder="搜索你想要的内容...">
-                        </div>
-                    </div>
-                    <a class="tx" href="user-home.html"><img src="images/tx/tx.png" class="img-circle" alt=""></a>
-                </form>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
     <!-- end of navbar -->
     <div class="container-fluid">
         <div class="container off-con">
             <div class="info-panel">
                 <div>
-                    <img id="tx" class="img-circle" src="images/tx/txmin.png" alt="">
-                    <h3>蛋定<a href="modify-user-info.html"><span title="修改个人资料" class="glyphicon glyphicon-wrench"></span></a></h3>
+                    <img id="tx" class="img-circle" src="{{'data:image/jpeg;base64,' + avatar if avatar else '/static/images/tx/txmin.png' }}" alt="" style="width:100px;height:100px">
+                    <h3>{{current_user.nickname}}<a href="{{ url_for('user.modify_info') }}"><span title="修改个人资料" class="glyphicon glyphicon-wrench"></span></a></h3>
                 </div>
                 <div class="gray">
                     <span title="性别" class="glyphicon glyphicon-user"></span>
-                    <span title="性别">男</span>
+                    <span title="性别">{{ '男' if current_user.gender == 0 else '女'}}</span>
                     <span title="积分" class="glyphicon glyphicon-leaf"></span>
-                    <span title="积分">1500</span>
+                    <span title="积分">{{ current_user.point }}</span>
+                </div>
+                <div>
+                    <a href="{{url_for('user.logout')}}">退出登录</a>
                 </div>
             </div>
             <hr>
             <div class="user-route-info">
                 <div>
                     <ul class="nav nav-pills">
-                        <li class="active"><a data-toggle="pill" href="#rt-joined">已加入的路线</a></li>
-                        <li><a data-toggle="pill" href="#rt-not-complete">未完成路线</a></li>
+                        <li class="active"><a data-toggle="pill" href="#rt-joined">未完成路线</a></li>
+                        <li><a data-toggle="pill" href="#rt-not-complete">完成度</a></li>
                         <li><a data-toggle="pill" href="#rt-complete">已完成路线</a></li>
                         <li><a data-toggle="pill" href="#rt-add">我创建的路线</a></li>
                     </ul>
@@ -127,13 +92,13 @@
                         <h2>路线1</h2>
                         <div class="progress">
                             <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
-                                <span class="sr-only">40% Complete (success)</span>
+                                40%
                             </div>
                         </div>
                         <h2>路线2</h2>
                         <div class="progress">
-                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
-                                <span class="sr-only">40% Complete (success)</span>
+                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="67" aria-valuemin="0" aria-valuemax="100" style="width: 67%">
+                                67%
                             </div>
                         </div>
                     </div>

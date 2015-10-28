@@ -20,54 +20,16 @@
   </head>
 
   <body id="top">
-    <!-- navbar -->
-    <nav class="navbar-fixed-top navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs--navbar-collapse-1">
-                    <span class="sr-only">Toggle navigations</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">MYROUTE</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs--navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                   <li><a href="category.html">推荐分类</a></li>
-                        <li><a href="create-route.html">创建路线</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="disabled"><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                            <li class="divider"></li>
-                            <li class="disabled"><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
-                        <div class="has-feedback">
-                            <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
-                            <input type="text" class="form-control" placeholder="搜索你想要的内容...">
-                        </div>
-                    </div>
-                    <a class="tx" href="user-home.html"><img src="images/tx/tx.png" class="img-circle" alt=""></a>
-                </form>
-            </div>
-        </div>
-    </nav>
-    <!-- end of navbar -->
+
+    {% include 'navbar.html' %}
+
     <div class="container-fluid">
         <div class="container off-con modify">
             <div class="row">
                 <div class="m-avatar col-md-12">
-                    <img class="img-circle" src="images/tx/txmin.png" height="120" width="120">
-                    <form>
-                        <button class="btn-primary file-btn" href="">选择文件<input type="file" id="input-file" value="请选择文件" ></button>
+                    <img class="img-circle" src="{{'data:image/jpeg;base64,' + avatar if avatar else '/static/images/tx/txmin.png' }}" height="120" width="120">
+                    <form id="upload_avatar_form" enctype=multipart/form-data action="{{url_for('user.upload_avatar')}}" method="post">
+                        <button class="btn-primary file-btn" href="">选择头像文件<input type="file" id="input-file" name="avatar" value="" onchange="upload_avatar()"></button>
                         <p class="help-block">图片大小不要超过100G</p>
                         <hr>
                     </form>
@@ -76,29 +38,23 @@
 
 
                 <div class="col-md-10 col-md-offset-1 m-info">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-4 col-md-4 control-label">请输入邮箱地址</label>
-                        <div class="col-sm-8 col-md-8">
-                            <input type="email" class="form-control" id="inputEmail3" placeholder="Email Address">
-                        </div>
-                    </div>
+                <form class="form-horizontal" action="{{url_for('user.modify_password')}}" method="post">
                     <div class="form-group">
                         <label for="inputPassword3" class="col-sm-4 col-md-4 control-label">请输入旧密码</label>
                         <div class="col-sm-8 col-md-8">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="old_password">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputPassword3" class="col-sm-4 col-md-4 control-label">请输入新密码</label>
                         <div class="col-sm-8 col-md-8">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="new_password">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="inputPassword3" class="col-sm-4 col-md-4 control-label">请确认新密码</label>
                         <div class="col-sm-8 col-md-8">
-                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+                            <input type="password" class="form-control" id="inputPassword3" placeholder="Password" name="new_password_conf">
                         </div>
                     </div>          
                     <button type="submit" class="file-btn">确认修改</button>
@@ -148,6 +104,9 @@
             });
         });
     });
+    function upload_avatar(){
+        $('#upload_avatar_form').submit();
+    }
 </script>
 </body>
 

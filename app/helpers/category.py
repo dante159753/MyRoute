@@ -1,18 +1,22 @@
+import pytz
+
+from base64 import b64encode
 from datetime import datetime
 from bson import ObjectId
-from base64 import b64encode
-
-from app.models.user import User
-from app.models.route import Route
 from app.models.category import Category
-from app.helpers.timestamp import dt_to_ts
+from app.models.route import RateInfo
 from app.helpers.route import RouteHelper
+from app.helpers.timestamp import get_formatted_time
 
 
 class CategoryHelper(object):
     @staticmethod
     def get(category_id):
         return Category.objects(id=category_id).first()
+
+    @staticmethod
+    def get_by_title(title):
+        return Category.objects(title__startswith=title).first()
 
     @staticmethod
     def get_roots():
@@ -27,7 +31,6 @@ class CategoryHelper(object):
             father = CategoryHelper.get(father_id)
             bread_list.insert(0, (father.title, father.id))
             CategoryHelper.gene_bread(bread_list)
-
 
     @staticmethod
     def get_son_categorys(category_id):
@@ -51,7 +54,12 @@ class CategoryHelper(object):
 
         result_list = []
         for son_route_id in category.routes:
-            result_lsit.append(RouteHelper.get(son_route_id))
+            result_list.append(RouteHelper.get(son_route_id))
+
+        for son_route in result_list:
+            son_route.formatted_date = get_formatted_time(son_route.create_ts)
+            son_route.n_comment = 0 #TODO use disqus api to get comment count
+            son_route.n_rate = RateInfo.objects(route=son_route.id).count()
 
         return result_list
 
@@ -59,20 +67,21 @@ class CategoryHelper(object):
     def _reduce_find_hot_route(x, y):
         """ Give x and y, select a hotter one."""
         return x if x > y else y
-    
+
     @staticmethod
     def _recursive_find_hot_route(category_id):
         """ Give a category, find the hotest route in its routes and sons."""
         category = CategoryHelper.get(category_id)
-        
+
         hot_route = None
         if category.routes:
-            hot_route = reduce(reduce_find_hot_route, category.routes)
+            hot_route = reduce(CategoryHelper._reduce_find_hot_route, category.routes)
         if category.sons:
-            hot_route = reduce(reduce_find_hot_route, [_recursive_find_hot_route(son_category) for son_category in category.sons], hot_route)
-            
-        return hot_route
+            hot_route = reduce(CategoryHelper._reduce_find_hot_route,
+                               [CategoryHelper._recursive_find_hot_route(son_category) for son_category in
+                                category.sons], hot_route)
 
+        return hot_route
 
     @staticmethod
     def get_child_hot_route(category_id):
@@ -81,17 +90,18 @@ class CategoryHelper(object):
         assert CategoryHelper.get(category_id)
 
         category = CategoryHelper.get(category_id)
-        
+
         hot_route = None
         if category.sons:
-            hot_route = reduce(reduce_find_hot_route, [_recursive_find_hot_route(son_category) for son_category in category.sons], hot_route)
-            
+            hot_route = reduce(CategoryHelper._reduce_find_hot_route,
+                               [CategoryHelper._recursive_find_hot_route(son_category) for son_category in
+                                category.sons], hot_route)
+
         return hot_route
 
     @staticmethod
     def get_hot_categorys():
         return Category.objects()[:6]
-
 
     @staticmethod
     def add(title, desc, father, icon):
@@ -99,7 +109,7 @@ class CategoryHelper(object):
         assert isinstance(desc, basestring), 'title is not string'
         assert len(title) > 0, 'title name too short!'
         assert len(desc) > 5, 'desc name too short!'
-        assert father == None or isinstance(father, ObjectId)
+        assert father is None or isinstance(father, ObjectId)
         if father:
             assert CategoryHelper.get(father)
 
@@ -140,7 +150,7 @@ class CategoryHelper(object):
     @staticmethod
     def add_route(category_id, route_id):
         assert isinstance(category_id, ObjectId)
-        assert CategoryHelper.get(CategoryHelper)
+        assert CategoryHelper.get(category_id)
         assert isinstance(route_id, ObjectId)
         assert RouteHelper.get(route_id)
 
@@ -151,4 +161,3 @@ class CategoryHelper(object):
         category.save()
 
         return category
-

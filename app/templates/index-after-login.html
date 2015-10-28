@@ -21,51 +21,16 @@
 
 <body id="top">
     <!-- navbar -->
-    <nav class="navbar-fixed-top navbar-inverse" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigations</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">MYROUTE</a>
-            </div>
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="index.html">推荐分类</a></li>
-                    <li><a href="create-route.html">创建路线</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="disabled"><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                            <li class="divider"></li>
-                            <li class="disabled"><a href="#">导航1</a></li>
-                            <li><a href="#">导航1</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <form class="navbar-form navbar-right" role="search">
-                    <div class="form-group">
-                        <div class="has-feedback">
-                            <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
-                            <input type="text" class="form-control" placeholder="搜索你想要的内容...">
-                        </div>
-                    </div>
-                    <a class="tx" href="user-home.html"><img src="images/tx/tx.png" class="img-circle" alt=""></a>
-                </form>
-            </div>
-        </div>
-    </nav>
+    {% include 'navbar.html' %}
     <!-- end of navbar -->
     <div class="container-fluid">
         <div class="container off-con">
             <div class="row">
                 <!-- main -->
                 <div class="col-md-9" role="main">
+                    {% for message in get_flashed_messages() %}
+                        <div class="alert alert-info" role="alert">{{ message }}</div>
+                    {% endfor %}
                     <h1>推荐分类</h1>
                     <hr>
                     <div class="row">
@@ -106,7 +71,7 @@
                 <!-- side-panel -->
                 <div class="col-md-3" role="complementary">
                     <div class="user-panel affix" id="user-panel">
-                        <a href="user_home.html"><img class="img-circle" src="images/tx/txmin.png" alt="username"></a>
+                        <a href="{{url_for('user.user_home_page')}}"><img class="img-circle" src="{{'data:image/jpeg;base64,' + avatar if avatar else '/static/images/tx/txmin.png' }}" alt="username" style="width:100px;height:100px"></a>
 						<h3>{{ current_user.nickname }} <small>欢迎您!</small></h3>
                         <hr>
                         <div class="user-info">
@@ -114,7 +79,7 @@
 							<p class="text-primary">完成路线 <span class="badge">{{ stat['finished'] }}</span></p>
 							<p class="text-primary">积分 <span class="badge">{{ current_user.point }}</span></p>
                             <hr>
-                            <a href="user_home">进入个人中心</a>
+                            <a href="{{url_for('user.user_home_page')}}">进入个人中心</a>
                         </div>
                     </div>
                 </div>
@@ -133,7 +98,7 @@
         </div>
     </div>
       <div id="totop">
-        <a href="#top"><img title="回到顶部" src="images/arrow-g.png"></a>
+        <a href="#top"><img title="回到顶部" src="/static/images/arrow-g.png"></a>
     </div>
     <!--container-fluid-->
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
