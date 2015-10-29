@@ -44,7 +44,7 @@
                 <div class="father-route">
                     <div class="panel-body">
                         <p class="text-primary">
-                            <strong>{{ son_route.title }}</strong>
+                            <a href="{{ url_for('route.route_page', route_id=son_route.id) }}"><strong>{{ son_route.title }}</strong></a>
                             <small class="gray pull-right">{{ son_route.formatted_date }}</small>
                         </p>
                         <div class="cat-img pull-left"><img src="/static/images/cat-img/01.png" alt=""></div>
@@ -73,12 +73,12 @@
                 <div class="child-route">
                     <div class="panel-body">
                         <p class="text-primary">
-                            <strong>{{ hot.title }}</strong>
-                            <small class="gray pull-right">{{ hot.formatted_date }}</small>
+                            <strong>{{ hot['route'].title }}</strong>
+                            <small class="gray pull-right">{{ hot['date'] }}</small>
                         </p>
                         <div class="cat-img pull-left"><img src="static/images/cat-img/02.png" alt=""></div>
                         <div class="cat-route-info media-body">
-                            <p>{{ hot.desc }}<a href="{{ url_for('route.route_page', route_id=hot.id) }}"><span
+                            <p>简述<a href="{{ url_for('route.route_page', route_id=hot['route'].id) }}"><span
                                     class="text-primary">查看全部 >></span></a></p>
                         </div>
                     </div>
@@ -97,7 +97,7 @@
             <!-- side-panel -->
             <div class="col-md-3" id="side-menu">
                 <div class="hidden-xs hidden-sm">
-                    <a><img class="img-circle" src="{{'data:image/jpeg;base64,' + avatar if avatar else '/static/images/tx/txmin.png' }}" alt="username" style="width:100px;height:100px"></a>
+                    <a><img class="img-circle" src="{{'data:image/jpeg;base64,' + category.icon.read() if category.icon else '/static/images/cat-default.jpg' }}" alt="username" style="width:100px;height:100px"></a>
 
                     <h3>{{ category.title }}</h3>
 
@@ -110,10 +110,10 @@
                         {% for son_category in son_categorys %}
                         <a href="{{ url_for('category.category_page', category_id=son_category.id) }}"><img
                                 class="img-circle cat-child" title="{{ son_category.title }}"
-                                src="images/cat-img/01-s.png"></a>
+                                src="{{'data:image/jpeg;base64,' + son_category.icon.read() if son_category.icon else '/static/images/cat-default.jpg' }}" style="width:60px;height:60px"></a>
                         {% endfor %}
                         <hr>
-                        <a href="user_home">进入个人中心</a>
+                        <a href="{{url_for('user.user_home_page')}}">进入个人中心</a>
                     </div>
                 </div>
             </div>

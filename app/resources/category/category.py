@@ -37,10 +37,12 @@ def category_page(category_id):
     category.n_routes = len(category.routes)
     breadcrumb_list = [(category.title, category.id)]
     CategoryHelper.gene_bread(breadcrumb_list)
-    avatar = current_user.avatar.read()
 
     son_routes = CategoryHelper.get_son_routes(category.id)
-    sons_hot_routes = []
+
+    sons_hot_routes = CategoryHelper.get_child_hot_route(category.id)
+
+    son_categorys = CategoryHelper.get_son_categorys(category.id)
 
     return render_template(
         'route-father.html',
@@ -48,7 +50,7 @@ def category_page(category_id):
         category=category,
         son_routes=son_routes,
         sons_hot_routes=sons_hot_routes,
-        avatar=avatar
+        son_categorys=son_categorys
     )
 
 

@@ -22,5 +22,5 @@ class Route(Document):
 class RateInfo(Document):
     user = ObjectIdField(required=True)
     route = ObjectIdField(required=True)
-    score = IntField(required=True, choices=tuple(range(1,6)))
+    score = IntField(required=True, choices=tuple(range(1, 6)))
 

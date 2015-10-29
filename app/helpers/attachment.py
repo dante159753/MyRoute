@@ -63,21 +63,26 @@ class AttachmentHelper(object):
         attach.delete()
 
     @staticmethod
-    def upvote(attach_id):
+    def toggle_vote(attach_id):
         assert isinstance(attach_id, ObjectId)
         assert AttachmentHelper.get(attach_id)
 
         attach = AttachmentHelper.get(attach_id)
         if current_user.id not in attach.upvote_list:
             attach.upvote_list.append(current_user.id)
-        attach.save()
+            attach.save()
+            return 'upvote', len(attach.upvote_list)
+        if current_user.id in attach.upvote_list:
+            attach.upvote_list.remove(current_user.id)
+            attach.save()
+            return 'downvote', len(attach.upvote_list)
 
     @staticmethod
-    def downvote(attach_id):
+    def get_n_upvote(attach_id):
         assert isinstance(attach_id, ObjectId)
         assert AttachmentHelper.get(attach_id)
 
         attach = AttachmentHelper.get(attach_id)
-        if current_user.id in attach.upvote_list:
-            attach.upvote_list.remove(current_user.id)
-        attach.save()
+
+        return len(attach.upvote_list)
+

@@ -1,9 +1,12 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import json
 from bson import ObjectId
 from bleach import clean
 
 from flask.ext.login import login_required, login_user, logout_user, current_user
-from flask import render_template, redirect, flash, url_for, request
+from flask import render_template, redirect, flash, url_for, request, jsonify
 
 from app.helpers.route import RouteHelper
 from app.helpers.attachment import AttachmentHelper
@@ -29,13 +32,16 @@ def route_page(route_id):
     route.author = UserHelper.get(route.author)
     route.formatted_time = get_formatted_time(route.create_ts)
     route.stat = RouteHelper.get_route_stat(route.id)
-    #route.cleaned_content = clean(route.content.read().decode('utf-8'), ['a', 'div', 'span', 'img'])
-    route.cleaned_content = route.content.read().decode('utf-8')  # TODO use bleach to sanitise html
+    route.cleaned_content = route.content.read().decode('utf-8')  # TODO: use bleach to sanitise html
+    route.my_rate = RouteHelper.get_user_rate(route.id)
+    attachs = RouteHelper.get_attachs(route.id)
+    joined = route.id in current_user.entered_routes
+    finished = RouteHelper.is_route_finished(route.id)
 
     if not route.finished:
         return redirect(url_for('route.add_attach_page', route_id=route.id))
 
-    return render_template('route-detail.html', route=route)
+    return render_template('route-detail.html', route=route, attachs=attachs, joined=joined, finished=finished)
 
 
 @route_blueprint.route('/<route_id>/add_attach/', methods=['GET'])
@@ -167,8 +173,63 @@ def add_route():
     return redirect(url_for('route.add_attach_page', route_id=new_route.id))
 
 
+@route_blueprint.route('/join/<route_id>/', methods=['GET'])
+@login_required
+def join(route_id):
+    try:
+        route_id = ObjectId(route_id)
+        assert RouteHelper.get(route_id)
+    except AssertionError, e:
+        flash(e.message)
+        return redirect(url_for('home.home'))
+
+    RouteHelper.join(route_id)
+    return redirect(url_for('route.route_page', route_id=route_id))
+
+
+@route_blueprint.route('/finish_attach/<route_id>/<attachment_id>/', methods=['GET'])
+@login_required
+def finish_attach(route_id, attachment_id):
+    try:
+        route_id = ObjectId(route_id)
+        attachment_id = ObjectId(attachment_id)
+        assert RouteHelper.get(route_id)
+        assert AttachmentHelper.get(attachment_id)
+    except AssertionError, e:
+        flash(e.message)
+        return redirect(url_for('home.home'))
+
+    RouteHelper.finish_attach(route_id, attachment_id)
+    return redirect(url_for('route.route_page', route_id=route_id))
+
+
 @route_blueprint.route('/route/<route_id>/rate/', methods=['POST'])
 @login_required
-def rate():
-    pass
+def rate(route_id):
+    try:
+        route_id = ObjectId(route_id)
+        assert 'score' in request.form
+        score = int(request.form['score'])
+        assert RouteHelper.get(route_id)
+    except AssertionError, e:
+        flash(e.message)
+        return redirect(url_for('home.home'))
 
+    RouteHelper.rate(route_id, score)
+    flash(u'评分成功!')
+    return redirect(url_for('route.route_page', route_id=route_id))
+
+
+@route_blueprint.route('/route/<route_id>/attach/<attachment_id>/like/', methods=['POST'])
+@login_required
+def like_attach(route_id, attachment_id):
+    try:
+        route_id = ObjectId(route_id)
+        attachment_id = ObjectId(attachment_id)
+        assert RouteHelper.get(route_id)
+        assert AttachmentHelper.get(attachment_id)
+        state, number = AttachmentHelper.toggle_vote(attachment_id)
+    except AssertionError:
+        return jsonify({'code': 0})
+
+    return jsonify({'code': state, 'number': number})

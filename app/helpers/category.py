@@ -66,7 +66,10 @@ class CategoryHelper(object):
     @staticmethod
     def _reduce_find_hot_route(x, y):
         """ Give x and y, select a hotter one."""
-        return x if x > y else y
+        route_x = RouteHelper.get(x) if x else None
+        route_y = RouteHelper.get(y) if y else None
+        print 'x:', route_x.title if route_x else 'None', 'vs y:', route_y.title if route_y else 'None'
+        return x if route_x else y
 
     @staticmethod
     def _recursive_find_hot_route(category_id):
@@ -91,13 +94,23 @@ class CategoryHelper(object):
 
         category = CategoryHelper.get(category_id)
 
-        hot_route = None
+        hot_routes = []
         if category.sons:
-            hot_route = reduce(CategoryHelper._reduce_find_hot_route,
-                               [CategoryHelper._recursive_find_hot_route(son_category) for son_category in
-                                category.sons], hot_route)
+            for son_cate in category.sons:
+                print son_cate
+                son_hot_route_id = CategoryHelper._recursive_find_hot_route(son_cate)
+                if son_hot_route_id:
+                    son_hot_route = RouteHelper.get(son_hot_route_id)
+                    son = CategoryHelper.get(son_cate)
+                    hot_routes.append({
+                        'category_title': son.title,
+                        'category_id': son.id,
+                        'route': son_hot_route,
+                        'n_rate': RouteHelper.get_route_stat(son_hot_route.id)['n_rate'],
+                        'date': get_formatted_time(son_hot_route.create_ts)
+                    })
 
-        return hot_route
+        return hot_routes
 
     @staticmethod
     def get_hot_categorys():

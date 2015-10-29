@@ -1,6 +1,6 @@
 from datetime import datetime
-
 from bson import ObjectId
+from json import loads
 from flask.ext.login import current_user, AnonymousUserMixin
 from mongoengine import *
 from app.models.route import Route, RateInfo
@@ -30,11 +30,26 @@ class RouteHelper(object):
         return EnteredRoute.objects(Q(user=current_user.id) & Q(route=route_id)).first()
 
     @staticmethod
+    def get_attachs(route_id):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+
+        attachs = [AttachmentHelper.get(attach_id) for attach_id in route.attached]
+        for attach in attachs:
+            attach.json_info = loads(attach.info) if attach.atype != 3 else attach.info
+            attach.finished = RouteHelper.is_attach_finished(route_id, attach.id)
+            attach.n_like = len(attach.upvote_list)
+            attach.user_upvoted = current_user.id in attach.upvote_list
+        return attachs
+
+    @staticmethod
     def join(route_id):
         """Join the Route"""
         assert isinstance(route_id, ObjectId)
         route = RouteHelper.get(route_id)
         assert route
+        assert not EnteredRoute.objects(Q(user=current_user.id) & Q(route=route.id))
         assert route.finished
 
         new_entered_route = EnteredRoute()
@@ -119,6 +134,34 @@ class RouteHelper(object):
         entered_route.save()
 
     @staticmethod
+    def is_attach_finished(route_id, attach_id):
+        assert isinstance(route_id, ObjectId)
+        assert isinstance(attach_id, ObjectId)
+        assert AttachmentHelper.get(attach_id)
+        assert RouteHelper.get(route_id)
+
+        route = RouteHelper.get(route_id)
+        entered_route = RouteHelper.get_entered_route(route_id)
+
+        if not entered_route:
+            return False
+
+        return attach_id in entered_route.attach_complete
+
+    @staticmethod
+    def is_route_finished(route_id):
+        assert isinstance(route_id, ObjectId)
+        assert RouteHelper.get(route_id)
+
+        route = RouteHelper.get(route_id)
+        entered_route = RouteHelper.get_entered_route(route_id)
+
+        if not entered_route:
+            return False
+
+        return entered_route.percentage == 100
+
+    @staticmethod
     def get_route_stat(route_id):
         assert isinstance(route_id, ObjectId)
         route = RouteHelper.get(route_id)
@@ -131,3 +174,63 @@ class RouteHelper(object):
 
         return stat
 
+    @staticmethod
+    def _recalculate_avg(route_id):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+
+        route.avg_rate = RateInfo.objects(route=route.id).average('score')
+        route.save()
+
+    @staticmethod
+    def rate(route_id, score):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+        assert isinstance(score, int)
+
+        rate_info = RateInfo.objects(Q(route=route_id) & Q(user=current_user.id)).first()
+        if rate_info:
+            rate_info.score = score
+            rate_info.save()
+        else:
+            rate_info = RateInfo()
+            rate_info.route = route_id
+            rate_info.user = current_user.id
+            rate_info.score = score
+            rate_info.save()
+
+        RouteHelper._recalculate_avg(route_id)
+
+    @staticmethod
+    def get_user_rate(route_id):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+
+        rate_info = RateInfo.objects(Q(route=route_id) & Q(user=current_user.id)).first()
+
+        if rate_info:
+            return rate_info.score
+        else:
+            return None
+
+    @staticmethod
+    def get_user_routes(finished):
+        assert isinstance(finished, bool)
+
+        if finished:
+            entered_routes = list(EnteredRoute.objects(Q(user=current_user.id) & Q(percentage=100)))
+        else:
+            entered_routes = list(EnteredRoute.objects(Q(user=current_user.id) & Q(percentage__ne=100)))
+
+        routes = []
+        for entered in entered_routes:
+            routes.append(RouteHelper.get(entered.route))
+
+        if not finished:
+            for route in routes:
+                route.percentage = RouteHelper.get_entered_route(route.id).percentage
+
+        return routes

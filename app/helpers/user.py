@@ -134,3 +134,4 @@ class UserHelper(object):
             return EnteredRoute.objects(Q(user=current_user.id) & Q(percentage__ne=100)).count()
         else:
             return EnteredRoute.objects(user=current_user.id).count()
+

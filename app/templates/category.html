@@ -29,19 +29,25 @@
                 <!-- main -->
                 
                 <div class="col-md-9" role="main"> 
-                <h1>寻找你需要的分类</h1>
+                <h1>寻找你感兴趣的分类</h1>
                 <hr>
 					{% for root in roots %}
 					<div class="panel panel-default" id="section-{{ loop.index }}">
                         <div class="panel-heading">
-							<h3 class="panel-title">{{ root.title }}</h3>
+                            <a href="{{url_for('category.category_page', category_id=root.id)}}">
+							    <h3 class="panel-title">{{ root.title }}</h3>
+                            </a>
                         </div>
                         <div class="panel-body">
-                            <div>
-								<p>{{ root.desc }}</p>
-                            </div>
+                            <a href="{{url_for('category.category_page', category_id=root.id)}}">
+                                <div class="cat-img pull-left"><img src="{{'data:image/jpeg;base64,' + root.icon.read() if root.icon else '/static/images/cat-default.jpg' }}"/></div>
+                                <div class="media-body">
+							    	<p class="media-body">{{ root.desc }}</p>
+                                </div>
+                            </a>
                             <hr>
-							<h5 class="media-heading">精华子分类</h5>
+							<h4 class="media-heading" >精华子分类</h4>
+                            <br>
                             <div class="row">
 								{% for son in root.top_sons %}
 								<a href="{{url_for('category.category_page', category_id=son.id)}}">

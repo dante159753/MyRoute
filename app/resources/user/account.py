@@ -4,6 +4,7 @@
 from flask.ext.login import login_required, login_user, logout_user, current_user
 from flask import render_template, redirect, flash, url_for, request
 from app.helpers.user import UserHelper
+from app.helpers.route import RouteHelper
 from . import user_blueprint
 from app.app import login_manager
 from app.helpers.parameter import check_form_para
@@ -72,7 +73,11 @@ def user_home_page():
     except AssertionError, e:
         avatar = None
 
-    return render_template('user-home.html', avatar=avatar)
+    unfinished_routes = RouteHelper.get_user_routes(False)
+    finished_routes = RouteHelper.get_user_routes(True)
+
+    return render_template('user-home.html', avatar=avatar, unfinished_routes=unfinished_routes,
+                           finished_routes=finished_routes)
 
 
 @user_blueprint.route('/modify_info/', methods=['GET'])

@@ -30,6 +30,7 @@
         <br>
             <form id="commit_form" action="{{ url_for('route.add_route') }}" method="post">
                 <input type="text" class="form-control" placeholder="请输入路线标题" name="title" />
+                <br/>
                 <div id="editor">请输入要编辑的内容...</div>
                 <input id="commit_route_content" type="hidden" name="content"/>
                 <input type="button" class="btn btn-primary btn-block" id="btn-send" value="递交内容">

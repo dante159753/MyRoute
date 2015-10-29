@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>学觅网</title>
+    <title>{{ route.title }}-MyRoute</title>
     <!-- Bootstrap -->
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -26,16 +26,21 @@
             <div class="container off-con">
                 <h1>{{ route.title }}</h1>
                 <p>作者：<span>{{ route.author.nickname }}</span></p>
-                <p>评分：<span>{{ route.avg_rate }}</span></p>
-                <div class="star-rating">
-                    <select id="example-f" name="rating">
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                    </select>
-                </div>
+                <p>平均评分：<span>{{ route.avg_rate }}</span></p>
+                {% if finished %}
+                <p>我的评分：<span>{{ route.my_rate if route.my_rate else '还未评分' }}</span></p>
+                <form id="rating-form" action="{{ url_for('route.rate', route_id=route.id) }}" method="post">
+                    <div class="star-rating">
+                        <select id="example-f" name="score" onchange="$('#rating-form').submit()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                </form>
+                {% endif %}
             </div>
         </div>
         <div class="container-fluid">
@@ -50,7 +55,15 @@
                             <hr>
                         </div>
                         <div class="col-md-3">
-                            <input type="button" id="rt-join" class="btn btn-primary btn-block rt-join" value="加入路线">
+                            {% if finished %}
+                            <input type="button" id="rt-join" class="btn btn-primary btn-block rt-join disabled" value="已完成路线">
+                            {% elif not joined %}
+                            <a href="{{ url_for('route.join', route_id=route.id) }}">
+                                <input type="button" id="rt-join" class="btn btn-primary btn-block rt-join" value="加入路线">
+                            </a>
+                            {% else %}
+                            <input type="button" id="rt-join" class="btn btn-primary btn-block rt-join disabled" value="已加入路线">
+                            {% endif %}
                         </div>
                     </div>
                     <div class="row">
@@ -59,61 +72,75 @@
                         </div>
                         <div class="col-md-3 col-sm-12 col-sx-12 rt-source">
                             <div class="book">
-                                <p>推荐书籍</p>
+                                <p>学习资料</p>
+                                {% for attach in attachs %}
                                 <hr>
+                                {% if attach.atype == 1 %}
                                 <div class="row">
                                     <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
-                                        <img src="http://book.rednode.cn/covers/web-development-with-node-express.png" alt="">
+                                        <img src="{{ attach.json_info['images']['medium'] }}" alt="">
                                     </div>
                                     <div class="col-md-6 col-sm-3 col-xs-6">
                                         <ul>
-                                            <li>书名:<a href="#" title="进入豆瓣查看详细信息"><span>Node.js Products and Expertise</span></a></li>
-                                            <li>作者:<span> StrongLoop</span></li>
-                                            <li>出版日期: <span>2014</span></li>
+                                            <li>书名:<a target="_blank" href="http://book.douban.com/subject/{{ attach.json_info['id'] }}/" title="进入豆瓣查看详细信息"><span>{{ attach.json_info['title'] }}</span></a></li>
+                                            <li>作者:<span> {{ attach.json_info['author'] | join(',')}}</span></li>
+                                            <li>出版社: <span>{{ attach.json_info['publisher']}}</span></li>
+                                            <li>出版日期: <span>{{ attach.json_info['pubdate'] }}</span></li>
                                         </ul>
-                                    </div>
-                                </div>
-                                <hr>
+
+                                {% elif attach.atype == 2 %}
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
-                                        <img src="http://book.rednode.cn/covers/web-development-with-node-express.png" alt="">
-                                    </div>
-                                    <div class="col-md-6 col-sm-3 col-xs-6">
+                                    <div class="col-md-12 col-sm-6 col-xs-12">
                                         <ul>
-                                            <li>书名:<a href="#" title="进入豆瓣查看详细信息"><span>Node.js Products and Expertise</span></a></li>
-                                            <li>作者:<span> StrongLoop</span></li>
-                                            <li>出版日期: <span>2014</span></li>
+                                            <li><img src="{{ attach.json_info['favicon_url'] }}"/></li>
+                                            <li>网页标题: <a href="{{ attach.json_info['url'] }}" target="_blank" ><span> {{ attach.json_info['title'] }}</span></a></li>
+                                            <li>概述: <span> {{ attach.json_info['description'][:40] }} <a href="{{ attach.json_info['url'] }}" target="_blank">...查看全部</a></span></li>
                                         </ul>
-                                    </div>
-                                </div>
-                                <hr>
+
+                                {% else %}
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
-                                        <img src="http://book.rednode.cn/covers/web-development-with-node-express.png" alt="">
-                                    </div>
-                                    <div class="col-md-6 col-sm-3 col-xs-6">
+                                    <div class="col-md-12 col-sm-6 col-xs-12">
                                         <ul>
-                                            <li>书名:<a href="#" title="进入豆瓣查看详细信息"><span>Node.js Products and Expertise</span></a></li>
-                                            <li>作者:<span> StrongLoop</span></li>
-                                            <li>出版日期: <span>2014</span></li>
+                                            <li>内容: <span>{{ attach.json_info }}</span></li>
                                         </ul>
-                                        <span id="like-e" class="glyphicon glyphicon-heart-empty"></span>
-                                         <span id="like" class="glyphicon glyphicon-heart"></span>
-                                         <span id="num" class="n-like">15</span>
+
+                                {% endif %}
+
+                                        {% if attach.finished %}
+                                        <span id="like-e{{ loop.index }}" class="glyphicon glyphicon-heart-empty" {{'style=display:none' if attach.user_upvoted}}></span>
+                                        <span id="like{{ loop.index }}" class="glyphicon glyphicon-heart" {{'style=display:none' if not attach.user_upvoted}}></span>
+                                        <span id="num{{ loop.index }}" class="n-like">{{attach.n_like}}</span>
+                                        {% endif %}
                                     </div>
                                 </div>
+
+                                {% if joined %}
+                                    {% if attach.finished %}
+                                    <input type="button" class="btn btn-primary btn-block btn-xs disabled" value="已完成">
+                                    {% else %}
+                                    <a href="{{ url_for('route.finish_attach', route_id=route.id, attachment_id=attach.id) }}">
+                                        <input type="button" class="btn btn-primary btn-block btn-xs" value="我已经学习完这份资料">
+                                    </a>
+                                    {% endif %}
+                                {% endif %}
+
+                                {% endfor %}
                             </div>
                             <!--end-of-book-->
+                            <!--
                             <div class="link">
                                 <p>相关链接</p>
                                 <hr>
                                 <a href="http://book.rednode.cn/">史上最全的Node.js书籍集合— —For those who love Node.js</a>
                                 <hr>
-                                <a href="http://book.rednode.cn/">史上最全的Node.js书籍集合— —For those who love Node.js</a>
                             </div>
+                            -->
                             <!--end-of-link-->
                         </div>
                         <!--end-of-rt-source-->
+                        <div class="col-md-9 col-sm-12 col-sx-12 rt-detail">
+                            <div id="disqus_thread"></div>
+                        </div>
                     </div>
                 </div>
                 <div id="comment"></div>
@@ -158,27 +185,68 @@
             });
         });
 
-        $("#rt-join").click(function() {
-            document.getElementById("rt-join").value = "已加入路线";
-        });
-        $("#like-e").click(function() {  
-            var onum = $("#num");
-            var num = parseInt(onum.text());
-            document.getElementById("like-e").style.display="none";
-            document.getElementById("like").style.display="inline";
-            num++;
-            onum.text(num);
+        function attach_upvote(id, n_like){
+            var onum = $("#num" + id);
+            document.getElementById("like-e" + id).style.display="none";
+            document.getElementById("like" + id).style.display="inline";
+            onum.text(n_like);
+        }
 
+        function attach_downvote(id, n_like){
+            var onum = $("#num" + id);
+            document.getElementById("like-e" + id).style.display="inline";
+            document.getElementById("like" + id).style.display="none";
+            onum.text(n_like);
+        }
+
+        {% for attach in attachs %}
+        $("#like-e{{ loop.index }}").click(function() {
+            $.ajax('{{ url_for('route.like_attach', route_id=route.id, attachment_id=attach.id) }}', {
+                dataType: 'json',
+                method: 'POST'
+            }).done(function (data) {
+                if(data.code == 'upvote'){
+                    attach_upvote({{ loop.index }}, data.number);
+                }
+                else if(data.code == 'downvote'){
+                    attach_downvote({{ loop.index }}, data.number);
+                }
+            }).fail(function (xhr, status) {
+            }).always(function () {
+            });
         });
-          $("#like").click(function() {  
-            var onum = $("#num");
-            var num = parseInt(onum.text());
-            document.getElementById("like").style.display="none";
-            document.getElementById("like-e").style.display="inline";
-            num--;
-            onum.text(num);
+         $("#like{{ loop.index }}").click(function() {
+            $.ajax('{{ url_for('route.like_attach', route_id=route.id, attachment_id=attach.id) }}', {
+                dataType: 'json',
+                method: 'POST'
+            }).done(function (data) {
+                if(data.code == 'upvote'){
+                    attach_upvote({{ loop.index }}, data.number);
+                }
+                else if(data.code == 'downvote'){
+                    attach_downvote({{ loop.index }}, data.number);
+                }
+            }).fail(function (xhr, status) {
+            }).always(function () {
+            });
         });
+        {% endfor %}
+
         </script>
+        <!-- disqus loading code -->
+        <script type="text/javascript">
+            /* * * CONFIGURATION VARIABLES * * */
+            var disqus_shortname = 'mytest159753';
+
+            /* * * DON'T EDIT BELOW THIS LINE * * */
+            (function() {
+                var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+            })();
+        </script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+
     </body>
 
 </html>
