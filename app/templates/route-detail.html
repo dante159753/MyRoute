@@ -77,10 +77,10 @@
                                 <hr>
                                 {% if attach.atype == 1 %}
                                 <div class="row">
-                                    <div class="col-md-6 col-sm-3 col-xs-6 bk-img">
+                                    <div class="col-md-6 col-sm-6 col-xs-6 bk-img">
                                         <img src="{{ attach.json_info['images']['medium'] }}" alt="">
                                     </div>
-                                    <div class="col-md-6 col-sm-3 col-xs-6">
+                                    <div class="col-md-6 col-sm-6 col-xs-6">
                                         <ul>
                                             <li>书名:<a target="_blank" href="http://book.douban.com/subject/{{ attach.json_info['id'] }}/" title="进入豆瓣查看详细信息"><span>{{ attach.json_info['title'] }}</span></a></li>
                                             <li>作者:<span> {{ attach.json_info['author'] | join(',')}}</span></li>
@@ -90,7 +90,7 @@
 
                                 {% elif attach.atype == 2 %}
                                 <div class="row">
-                                    <div class="col-md-12 col-sm-6 col-xs-12">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
                                         <ul>
                                             <li><img src="{{ attach.json_info['favicon_url'] }}"/></li>
                                             <li>网页标题: <a href="{{ attach.json_info['url'] }}" target="_blank" ><span> {{ attach.json_info['title'] }}</span></a></li>
@@ -99,7 +99,7 @@
 
                                 {% else %}
                                 <div class="row">
-                                    <div class="col-md-12 col-sm-6 col-xs-12">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
                                         <ul>
                                             <li>内容: <span>{{ attach.json_info }}</span></li>
                                         </ul>
@@ -237,6 +237,9 @@
         <script type="text/javascript">
             /* * * CONFIGURATION VARIABLES * * */
             var disqus_shortname = 'mytest159753';
+            var disqus_identifier = 'route:{{ route.id }}';
+            var disqus_title = '{{ route.title }}';
+
 
             /* * * DON'T EDIT BELOW THIS LINE * * */
             (function() {

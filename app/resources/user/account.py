@@ -75,9 +75,10 @@ def user_home_page():
 
     unfinished_routes = RouteHelper.get_user_routes(False)
     finished_routes = RouteHelper.get_user_routes(True)
+    my_routes = RouteHelper.get_user_create_routes()
 
     return render_template('user-home.html', avatar=avatar, unfinished_routes=unfinished_routes,
-                           finished_routes=finished_routes)
+                           finished_routes=finished_routes, my_routes=my_routes)
 
 
 @user_blueprint.route('/modify_info/', methods=['GET'])
@@ -98,10 +99,7 @@ def upload_avatar():
         assert 'avatar' in request.files, 'please select an avatar'
         UserHelper.modify_avatar(request.files['avatar'])
     except AssertionError, e:
-        if e.message:
-            flash(e.message)
-        else:
-            flash('')
+        flash(e.message)
         return redirect(url_for('home.home'))
 
     return redirect(url_for('user.user_home_page'))

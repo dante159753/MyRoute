@@ -58,7 +58,7 @@ def add_attach_page(route_id):
     route = RouteHelper.get(route_id)
 
     if route.author != current_user.id:
-        flash('you are not author of the route')
+        flash('you are not the author of the route')
         return redirect(url_for('home.home'))
 
     attachs = []
@@ -85,13 +85,13 @@ def add_attach(route_id):
     route = RouteHelper.get(route_id)
     
     if route.author != current_user.id:
-        flash('you are not author of the route')
+        flash('you are not the author of the route')
         return redirect(url_for('home.home'))
 
     try:
         check_form_para(['key', 'type'])
     except AssertionError, e:
-        flash('wrong para')
+        flash(e.message)
         return redirect(url_for('route.add_attach_page', route_id=route.id))
 
     info_type = AttachType(int(request.form['type']))
@@ -120,8 +120,7 @@ def finish_edit(route_id):
         return redirect(url_for('home.home'))
 
     RouteHelper.finish_edit(route.id)
-    
-    flash('finished successfully')
+
     return redirect(url_for('route.route_page', route_id=route.id))
 
 
@@ -150,25 +149,34 @@ def delete_attach(route_id, attach_id):
     return redirect(url_for('route.add_attach_page', route_id=route.id))
 
 
-@route_blueprint.route('/create_route/', methods=['GET'])
+@route_blueprint.route('/category/<category_id>/create_route/', methods=['GET'])
 @login_required
-def create_route_page():
-    return render_template('create-route.html')
-
-
-@route_blueprint.route('/add/', methods=['POST'])
-@login_required
-def add_route():
+def create_route_page(category_id):
     try:
-        assert len(request.form['title']) > 0, 'please input title'
-        assert 'content' in request.form, 'please input route content'
+        category_id = ObjectId(category_id)
+        assert isinstance(category_id, ObjectId), 'invalid category_id'
+        assert CategoryHelper.get(category_id), 'category not found'
     except AssertionError, e:
         flash(e.message)
         return redirect(url_for('home.home'))
+    return render_template('create-route.html', category_id=category_id)
 
-    cpp_cate = CategoryHelper.get_by_title(u'C++')
 
-    new_route = RouteHelper.add(request.form['title'], cpp_cate.id, request.form['content'])
+@route_blueprint.route('/category/<category_id>/add/', methods=['POST'])
+@login_required
+def add_route(category_id):
+    try:
+        category_id = ObjectId(category_id)
+        assert len(request.form['title']) > 0, 'please input title'
+        assert 'content' in request.form, 'please input route content'
+        assert isinstance(category_id, ObjectId)
+        cate = CategoryHelper.get(category_id)
+        assert cate
+
+        new_route = RouteHelper.add(request.form['title'], cate.id, request.form['content'])
+    except AssertionError, e:
+        flash(e.message)
+        return redirect(url_for('home.home'))
 
     return redirect(url_for('route.add_attach_page', route_id=new_route.id))
 
@@ -180,7 +188,6 @@ def join(route_id):
         route_id = ObjectId(route_id)
         assert RouteHelper.get(route_id)
     except AssertionError, e:
-        flash(e.message)
         return redirect(url_for('home.home'))
 
     RouteHelper.join(route_id)
@@ -196,7 +203,6 @@ def finish_attach(route_id, attachment_id):
         assert RouteHelper.get(route_id)
         assert AttachmentHelper.get(attachment_id)
     except AssertionError, e:
-        flash(e.message)
         return redirect(url_for('home.home'))
 
     RouteHelper.finish_attach(route_id, attachment_id)
@@ -212,11 +218,9 @@ def rate(route_id):
         score = int(request.form['score'])
         assert RouteHelper.get(route_id)
     except AssertionError, e:
-        flash(e.message)
         return redirect(url_for('home.home'))
 
     RouteHelper.rate(route_id, score)
-    flash(u'评分成功!')
     return redirect(url_for('route.route_page', route_id=route_id))
 
 
@@ -233,3 +237,15 @@ def like_attach(route_id, attachment_id):
         return jsonify({'code': 0})
 
     return jsonify({'code': state, 'number': number})
+
+
+@route_blueprint.route('/search/', methods=['GET'])
+@login_required
+def search():
+    try:
+        assert 'keywords' in request.args
+    except AssertionError, e:
+        return redirect(url_for('home.home'))
+
+    results = RouteHelper.search(request.args['keywords'])
+    return render_template('search.html', results=results, keywords=request.args['keywords'])

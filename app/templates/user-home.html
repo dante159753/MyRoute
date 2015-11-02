@@ -106,20 +106,25 @@
                         {% endif %}
                     </div>
                     <div class="tab-pane" id="rt-add">
+                        {% if my_routes %}
+                        {% for row in my_routes | batch(3) %}
                         <div class="row">
-                           
-                            <a href="route-father.html">
+                            {% for route in row %}
+                            <a href="{{ url_for('route.route_page', route_id=route.id) }}">
                                 <div class="col-sm-4 col-md-3">
                                     <div class="thumbnail">
-                                        <img src="images/thumbs/03.jpg" alt="">
+                                        <img src="/static/images/thumbs/01.jpg" alt="">
                                         <div class="caption">
-                                            <h3>C++</h3>
-                                            <p>balabal.baladj.adij上帝发来撒的风景啊多废话浪费</p>
+                                            <h3>{{ route.title }}</h3>
+                                            <p>{{ route.desc }}</p>
                                         </div>
                                     </div>
                                 </div>
                             </a>
+                            {% endfor %}
                         </div>
+                        {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

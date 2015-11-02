@@ -30,6 +30,12 @@ class RouteHelper(object):
         return EnteredRoute.objects(Q(user=current_user.id) & Q(route=route_id)).first()
 
     @staticmethod
+    def search(keywords):
+        """Search routes by title"""
+        assert isinstance(keywords, basestring)
+        return list(Route.objects(title__contains=keywords))
+
+    @staticmethod
     def get_attachs(route_id):
         assert isinstance(route_id, ObjectId)
         route = RouteHelper.get(route_id)
@@ -234,3 +240,7 @@ class RouteHelper(object):
                 route.percentage = RouteHelper.get_entered_route(route.id).percentage
 
         return routes
+
+    @staticmethod
+    def get_user_create_routes():
+        return list(Route.objects(author=current_user.id))

@@ -44,5 +44,3 @@ from .resources.category import category_blueprint
 app.register_blueprint(category_blueprint, url_prefix='/category')
 del category_blueprint
 
-print app.url_map
-

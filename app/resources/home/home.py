@@ -1,5 +1,5 @@
-from flask.ext.login import login_required, current_user
-from flask import render_template, request
+from flask.ext.login import login_required, current_user, AnonymousUserMixin
+from flask import render_template, request, redirect, url_for
 from . import home_blueprint
 from app.helpers.category import CategoryHelper
 from app.helpers.user import UserHelper
@@ -20,6 +20,9 @@ def home():
 
 @home_blueprint.route('/')
 def intro():
+    if current_user.is_anonymous is not True:
+        return redirect(url_for('home.home'))
+
     regis_error = 1 if 'regis_error' in request.args else None
     login_error = 1 if 'login_error' in request.args else None
     return render_template('index.html', login_error=login_error, regis_error=regis_error)

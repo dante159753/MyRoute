@@ -55,8 +55,8 @@
                         </div>
                     </div>
                     <div class="cz-panel">
-                        <a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span>{{ son_route.n_comment }}条评论 </span></a>
-                        <a href="#"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>{{ son_route.n_rate }}次打分 </span></a>
+                        <a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span> <span class="disqus-comment-count" data-disqus-identifier="route:{{son_route.id}}"></span> 条评论 </span></a>
+                        <a href="#"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span> {{ son_route.n_rate }} 次打分 </span></a>
 
                         <div>
                         </div>
@@ -73,18 +73,18 @@
                 <div class="child-route">
                     <div class="panel-body">
                         <p class="text-primary">
-                            <strong>{{ hot['route'].title }}</strong>
+                            <a href="{{ url_for('route.route_page', route_id=hot['route'].id) }}" ><strong>{{ hot['route'].title }}</strong></a>
                             <small class="gray pull-right">{{ hot['date'] }}</small>
                         </p>
-                        <div class="cat-img pull-left"><img src="static/images/cat-img/02.png" alt=""></div>
+                        <div class="cat-img pull-left"><img src="/static/images/cat-img/01.png" alt=""></div>
                         <div class="cat-route-info media-body">
                             <p>简述<a href="{{ url_for('route.route_page', route_id=hot['route'].id) }}"><span
                                     class="text-primary">查看全部 >></span></a></p>
                         </div>
                     </div>
                     <div class="cz-panel">
-                        <a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span>{{ hot.n_comment }}条评论 </span></a>
-                        <a href="#"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span>{{ hot.n_rate }}次打分 </span></a>
+                        <a href="#"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span><span> <span class="disqus-comment-count" data-disqus-identifier="route:{{hot['route'].id}}"></span> 条评论 </span></a>
+                        <a href="#"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span><span> {{ hot.n_rate }} 次打分 </span></a>
 
                         <div>
                         </div>
@@ -106,6 +106,7 @@
                     <div class="user-info">
                         <p class="text-primary">当前分类下学习路线 <span class="badge">{{ category.n_routes }}</span></p>
 
+
                         <p class="text-primary">子分类</p>
                         {% for son_category in son_categorys %}
                         <a href="{{ url_for('category.category_page', category_id=son_category.id) }}"><img
@@ -113,7 +114,7 @@
                                 src="{{'data:image/jpeg;base64,' + son_category.icon.read() if son_category.icon else '/static/images/cat-default.jpg' }}" style="width:60px;height:60px"></a>
                         {% endfor %}
                         <hr>
-                        <a href="{{url_for('user.user_home_page')}}">进入个人中心</a>
+                        <a href="{{ url_for('route.create_route_page', category_id=category.id) }}"><button class="btn btn-primary btn-block btn-md">在当前分类下创建学习路线</button></a>
                     </div>
                 </div>
             </div>
@@ -173,7 +174,24 @@
         });
     });
 
+
+
 </script>
+
+<!-- 显示评论数量需要 -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'mytest159753'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+    var s = document.createElement('script'); s.async = true;
+    s.type = 'text/javascript';
+    s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
 </body>
 
 </html>

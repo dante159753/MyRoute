@@ -13,7 +13,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                        <li><a href="{{ url_for('category.root_page') }}">浏览分类</a></li>
-                        <li><a href="{{ url_for('route.create_route_page') }}">创建路线</a></li>
+                        <!--
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">功 能<span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -25,12 +25,13 @@
                                 <li><a href="#">导航1</a></li>
                             </ul>
                         </li>
+                        -->
                     </ul>
-                    <form class="navbar-form navbar-right" role="search">
+                    <form id="search_form" class="navbar-form navbar-right" role="search" action="{{url_for('route.search')}}">
                         <div class="form-group">
                             <div class="has-feedback">
-                                <a href="search.html"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
-                                <input type="text" class="form-control" placeholder="搜索你想要的内容...">
+                                <a href="javascript:void(0)" onclick="$('#search_form').submit();"><span id="search" class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span></a>
+                                <input type="text" class="form-control" name="keywords" placeholder="搜索路线标题..."/>
                             </div>
                         </div>
                         {% if avatar %}

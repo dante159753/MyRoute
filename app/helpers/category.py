@@ -68,7 +68,6 @@ class CategoryHelper(object):
         """ Give x and y, select a hotter one."""
         route_x = RouteHelper.get(x) if x else None
         route_y = RouteHelper.get(y) if y else None
-        print 'x:', route_x.title if route_x else 'None', 'vs y:', route_y.title if route_y else 'None'
         return x if route_x else y
 
     @staticmethod
@@ -97,7 +96,6 @@ class CategoryHelper(object):
         hot_routes = []
         if category.sons:
             for son_cate in category.sons:
-                print son_cate
                 son_hot_route_id = CategoryHelper._recursive_find_hot_route(son_cate)
                 if son_hot_route_id:
                     son_hot_route = RouteHelper.get(son_hot_route_id)
