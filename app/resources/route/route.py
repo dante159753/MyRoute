@@ -68,7 +68,7 @@ def add_attach_page(route_id):
             attachment.info = json.loads(attachment.info)
         attachs.append(attachment)
     
-    return render_template('create_route.html', route=route, attachs=attachs)
+    return render_template('create-attach.html', route=route, attachs=attachs)
 
 
 @route_blueprint.route('/<route_id>/add_attach/', methods=['POST'])
