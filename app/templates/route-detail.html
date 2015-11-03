@@ -94,7 +94,7 @@
                                         <ul>
                                             <li><img src="{{ attach.json_info['favicon_url'] }}"/></li>
                                             <li>网页标题: <a href="{{ attach.json_info['url'] }}" target="_blank" ><span> {{ attach.json_info['title'] }}</span></a></li>
-                                            <li>概述: <span> {{ attach.json_info['description'][:40] }} <a href="{{ attach.json_info['url'] }}" target="_blank">...查看全部</a></span></li>
+                                            <li>概述: <span> {{ attach.json_info['description'][:40] if 'description' in attach.json_info}} <a href="{{ attach.json_info['url'] }}" target="_blank">...查看全部</a></span></li>
                                         </ul>
 
                                 {% else %}

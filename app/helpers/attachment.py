@@ -1,4 +1,5 @@
 import requests
+import json
 from bson import ObjectId
 from flask.ext.login import current_user
 
@@ -33,6 +34,11 @@ class AttachmentHelper(object):
                 'key': app.config['EMBEDLY_KEY']
             }
             r = requests.get(app.config['EMBEDLY_EXTRACT_API'], params=req_paras)
+
+            json_info = json.loads(r.text)
+            if json_info['type'] == 'error':
+                return
+
             info = r.text
         else:
             info = key

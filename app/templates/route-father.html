@@ -47,7 +47,7 @@
                             <a href="{{ url_for('route.route_page', route_id=son_route.id) }}"><strong>{{ son_route.title }}</strong></a>
                             <small class="gray pull-right">{{ son_route.formatted_date }}</small>
                         </p>
-                        <div class="cat-img pull-left"><img src="/static/images/cat-img/01.png" alt=""></div>
+                        <div class="cat-img pull-left"><img src="{{'data:image/jpeg;base64,' + get_category_helper(son_route.father).icon.read() if get_category_helper(son_route.father) else '/static/images/cat-img/01.png' }}" alt=""></div>
                         <div class="cat-route-info media-body">
                             <p>{{ son_route.desc }}<a
                                     href="{{ url_for('route.route_page', route_id=son_route.id) }}"><span
@@ -76,7 +76,7 @@
                             <a href="{{ url_for('route.route_page', route_id=hot['route'].id) }}" ><strong>{{ hot['route'].title }}</strong></a>
                             <small class="gray pull-right">{{ hot['date'] }}</small>
                         </p>
-                        <div class="cat-img pull-left"><img src="/static/images/cat-img/01.png" alt=""></div>
+                        <div class="cat-img pull-left"><img src="{{'data:image/jpeg;base64,' + get_category_helper(hot['route'].father).icon.read() if get_category_helper(hot['route'].father) else '/static/images/cat-img/01.png' }}" alt=""></div>
                         <div class="cat-route-info media-body">
                             <p>简述<a href="{{ url_for('route.route_page', route_id=hot['route'].id) }}"><span
                                     class="text-primary">查看全部 >></span></a></p>

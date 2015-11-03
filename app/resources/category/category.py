@@ -50,7 +50,8 @@ def category_page(category_id):
         category=category,
         son_routes=son_routes,
         sons_hot_routes=sons_hot_routes,
-        son_categorys=son_categorys
+        son_categorys=son_categorys,
+        get_category_helper=CategoryHelper.get
     )
 
 
