@@ -50,6 +50,17 @@ class RouteHelper(object):
         return attachs
 
     @staticmethod
+    def remove_unfinished_route(route_list):
+        for route in route_list:
+            if isinstance(route, dict):
+                if not route['route'].finished:
+                    route_list.remove(route)
+            elif not route.finished:
+                route_list.remove(route)
+
+        return route_list
+
+    @staticmethod
     def join(route_id):
         """Join the Route"""
         assert isinstance(route_id, ObjectId)
@@ -108,12 +119,12 @@ class RouteHelper(object):
 
     @staticmethod
     def clear(route_id):
+        from app.helpers.route import RouteHelper
         assert isinstance(route_id, ObjectId)
         route = RouteHelper.get(route_id)
         assert route
         assert not route.finished
 
-        from app.helpers.route import RouteHelper
         for attach_id in route.attached:
             AttachmentHelper.delete(attach_id)
 
@@ -121,6 +132,30 @@ class RouteHelper(object):
             route.attached.pop()
 
         route.save()
+
+    @staticmethod
+    def delete_route(route_id):
+        assert isinstance(route_id, ObjectId)
+        route = RouteHelper.get(route_id)
+        assert route
+
+        for attach_id in route.attached:
+            AttachmentHelper.delete(attach_id)
+
+        f_cate = Category.objects(id=route.father).first()
+        f_cate.routes.remove(route.id)
+        f_cate.save()
+
+        enters = EnteredRoute.objects(route=route.id)
+        for entered_route in enters:
+            user = UserHelper.get(entered_route.user)
+            user.entered_routes.remove(route.id)
+            user.save()
+        enters.delete()
+
+        RateInfo.objects(route=route.id).delete()
+
+        route.delete()
 
     @staticmethod
     def finish_attach(route_id, attach_id):

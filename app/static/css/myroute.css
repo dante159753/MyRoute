@@ -302,3 +302,22 @@ text-align: center;
 .sc-content a:hover{
     color:#35b88f;
 }
+
+/*create-attach*/
+.nr input[type='submit'] {
+    margin-top: 0;
+    height: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.nr input[type='text'] {
+    width:400px;
+    display: inline;
+}
+.nr form {
+    padding: 1em;
+}
+.nr select {
+    width: 10%;
+    display: inline;
+}

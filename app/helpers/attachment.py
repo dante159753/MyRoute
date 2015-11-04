@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import requests
 import json
 from bson import ObjectId
@@ -27,6 +30,11 @@ class AttachmentHelper(object):
         # get book's info by isbn from douban
         if attach_type == AttachType.DOUBAN:
             r = requests.get(app.config['DOUBAN_ISBN_API'] + key)
+
+            json_info = json.loads(r.text)
+            if 'code' in json_info:
+                assert json_info['code'] != 6000, u'未找到该书籍'
+
             info = r.text
         elif attach_type == AttachType.URL:
             req_paras = {
@@ -36,8 +44,7 @@ class AttachmentHelper(object):
             r = requests.get(app.config['EMBEDLY_EXTRACT_API'], params=req_paras)
 
             json_info = json.loads(r.text)
-            if json_info['type'] == 'error':
-                return
+            assert json_info['type'] != 'error', u'无法获取相关网页信息'
 
             info = r.text
         else:

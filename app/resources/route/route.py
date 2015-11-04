@@ -96,9 +96,13 @@ def add_attach(route_id):
 
     info_type = AttachType(int(request.form['type']))
 
-    AttachmentHelper.add(route_id, info_type, request.form['key'])
+    try:
+        AttachmentHelper.add(route_id, info_type, request.form['key'])
+    except AssertionError, e:
+        flash(e.message)
+    else:
+        flash(u'资料添加成功')
 
-    flash('added successfully')
     return redirect(url_for('route.add_attach_page', route_id=route_id))
 
 
@@ -145,7 +149,7 @@ def delete_attach(route_id, attach_id):
 
     AttachmentHelper.delete(attach_id)
 
-    flash('deleted successfully')
+    flash(u'删除成功')
     return redirect(url_for('route.add_attach_page', route_id=route.id))
 
 

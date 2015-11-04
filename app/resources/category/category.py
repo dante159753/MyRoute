@@ -38,9 +38,9 @@ def category_page(category_id):
     breadcrumb_list = [(category.title, category.id)]
     CategoryHelper.gene_bread(breadcrumb_list)
 
-    son_routes = CategoryHelper.get_son_routes(category.id)
+    son_routes = RouteHelper.remove_unfinished_route(CategoryHelper.get_son_routes(category.id))
 
-    sons_hot_routes = CategoryHelper.get_child_hot_route(category.id)
+    sons_hot_routes = RouteHelper.remove_unfinished_route(CategoryHelper.get_child_hot_route(category.id))
 
     son_categorys = CategoryHelper.get_son_categorys(category.id)
 
